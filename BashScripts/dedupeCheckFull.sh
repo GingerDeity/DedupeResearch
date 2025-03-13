@@ -4,7 +4,7 @@
 # directory named "example" that contains files A, B, C, running:
 # "bash dedupeCheckFull.sh 4096 example/" would output 4KB deduplication results for:
 # [(A), (A, B), (A, C), (B), (B, C), (C)] 
-# $1 is window size, $2 will be the directory to do DedupeCheck on
+# $1 is window size, $2 will be the directory to do DedupeCheck on 
 
 files=($(ls $2))
 
