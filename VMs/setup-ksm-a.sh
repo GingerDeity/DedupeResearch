@@ -1,4 +1,8 @@
 #!/bin/bash
+# This code should be run from the perspective of the host machine. 
+# This sets up the level-1 VM, which I call KSM-A1. You'll have to 
+# ssh into it using the connect-ksm-a.sh script!
+
 EXE=qemu-system-x86_64
 IMG=QemuKVM/IMGs/ubuntu18_250G.img
 #CDROM=QemuKVM/CentOS-7-x86_64-Minimal-2009.iso
