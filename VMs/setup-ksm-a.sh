@@ -11,7 +11,7 @@ MEMSIZE=32G
 #MEMSIZE=32G,slots=2,maxmem=42G
 MONITOR='telnet:127.0.0.1:1235,server,nowait'
 NET='user,hostfwd=tcp::10023-:22'
-LOG=./running_ppcm.log
+LOG=./running_ppcm.log 
 #HUGE_PAGES=/huge
 
 date >> ${LOG}
