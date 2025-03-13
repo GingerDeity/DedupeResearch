@@ -2,8 +2,8 @@
 # This code takes in a directory to conduct fastcdc deduplication on, and
 # outputs all possible deduplication results up to two files. So, for a
 # directory named "example" that contains files A, B, C, running:
-# "bash dedupeCheckFull.sh 4096 example/" would output 4KB deduplication results for:
-# [(A), (A, B), (A, C), (B), (B, C), (C)] 
+# "bash fastFull.sh example/" would output fastcdc deduplication results for:
+# [(A), (A, B), (A, C), (B), (B, C), (C)]
 # The original fastcdc code takes in a directory, so to achieve the effect we have to move
 # files in and out of a temporary directory.
 # $1 is the directory to do fastcdc on
