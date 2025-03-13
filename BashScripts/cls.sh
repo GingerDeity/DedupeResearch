@@ -1,4 +1,8 @@
 #!/bin/bash
+# A simple utility function that clears the screen, prints out a header, and lists the contents of your current directory
+# This is especially helpful when you are observing multiple VMs at a time and give each VM a distinct header! In fact,
+# Each VM I use has a header.txt file that I use for this exact purpose
+
 clear
 layer0="     __  __     _____     ______     _______               _______ "
 layer1="    / /\/ /\   / ___/\   / __  /\   / ___  /\             / _____/\ "
