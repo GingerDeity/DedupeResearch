@@ -1,4 +1,6 @@
 #!/bin/bash
+# Similar to ksmls.sh, except this continuously updates as ksm runs!
+# Typically used in a combo of ksminit -> ksmstart -> ksmwatch -> ksmend
 
 while true; do
 	clear
