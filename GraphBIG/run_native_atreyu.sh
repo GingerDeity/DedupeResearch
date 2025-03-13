@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# This code basically runs GraphBIG! This was originally designed by Muhammad Laghari, 
+# and for my purposes all I needed to focus on was where the lines pertaining to 
+# benchmarks, dir, dataset, and threadcount. As of writing this comment (3-13-25), 
+# the script's pwd is /hdd0/atreyu/GraphBIG/benchmark/
+
 ulimit -s unlimited
 ulimit -f unlimited
 ulimit -l unlimited
