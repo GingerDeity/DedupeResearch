@@ -23,8 +23,8 @@ while sudo sshpass -p "admin" ssh -o StrictHostKeyChecking=no josh@localhost -p 
   echo >> "*** TIME (s) = $((i*TIME)) ***" >> "$TOPout"
   echo >> "*** TIME (s) = $((i*TIME)) ***" >> "$KSMout"  
   top -b -n 1 | awk -v cmd="qemu-system-x86" '
-        	NR<=7 || $12 == cmd' > "$TOPout"
-	./BashScripts/ksmls.sh > "$KSMout"
+        	NR<=7 || $12 == cmd' >> "$TOPout"
+	./BashScripts/ksmls.sh >> "$KSMout"
 	sleep "$TIME"
   ((i++))
 done
