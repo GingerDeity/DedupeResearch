@@ -3,6 +3,8 @@
 # given PIDs are still running and, if so, outputs filtered LVL-1 top info and KSM info 
 # to output files. Assumes KSM is already initialized and running. Change the
 # output file names and pathnames as necessary!
+# 1st arg = B2a PID
+# 2nd arg = B2b PID
 
 PID_B2a=$1
 PID_B2b=$2
