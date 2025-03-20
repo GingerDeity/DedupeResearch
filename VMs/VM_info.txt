@@ -1,0 +1,17 @@
+VM tree structure:
+         Host (Heap6)
+        /            \
+      KSM-A          KSM-B
+     /      \       /     \
+  A2a       A2b    B2a    B2b
+
+
+MONITOR/NET Ports:
+Host (Heap6)
+|- KSM-A=10023/1235
+|  |- KSM-A2a=10024/1235
+|  |- KSM-A2b=10025/1236
+|
+|- KSM-B=10026/1237
+|  |- KSM-B2a=10027/1237
+|  |- KSM-B2b=10028/1238
