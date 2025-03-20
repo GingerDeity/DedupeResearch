@@ -1,4 +1,5 @@
 #!/bin/bash
+# Setup KSM-B2a, configure IMG, NUMCPUS, and MEMSIZE as needed 
 EXE=qemu-system-x86_64
 IMG=QemuKVM/ubuntu20_80G.img
 #CDROM=QemuKVM/CentOS-7-x86_64-Minimal-2009.iso
