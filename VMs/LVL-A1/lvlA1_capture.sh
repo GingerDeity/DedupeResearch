@@ -13,8 +13,8 @@ KSMout="LVL-B1-ksm.txt"
 TOPout="LVL-B1-top.txt"
 echo "KSM iterating"
 
-while sudo sshpass -p "admin" ssh -o StrictHostKeyChecking=no josh@localhost -p 10027 "kill -0 $PID_B2a > /dev/null" && \
-	sudo sshpass -p "admin" ssh -o StrictHostKeyChecking=no josh@localhost -p 10028 "kill -0 $PID_B2b > /dev/null"; do
+while sudo sshpass -p "admin" ssh -o StrictHostKeyChecking=no josh@localhost -p 10024 "kill -0 $PID_B2a > /dev/null" && \
+	sudo sshpass -p "admin" ssh -o StrictHostKeyChecking=no josh@localhost -p 10025 "kill -0 $PID_B2b > /dev/null"; do
 	top -b -n 1 | awk -v cmd="qemu-system-x86" '
         	NR<=7 || $12 == cmd' > "$TOPout"
 	./BashScripts/ksmls.sh > "$KSMout"
