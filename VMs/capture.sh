@@ -2,7 +2,8 @@
 # To be used in LVL-1 VM, KSM-B. This ssh's into both LVL-2 VMs to check if
 # given PIDs are still running and, if so, outputs filtered LVL-1 top info and KSM info 
 # to output files. Assumes KSM is already initialized and running. Change the
-# output file names and pathnames as necessary!
+# output file names and pathnames as necessary! The text files will contain the final
+# KSM and top info right before one of the processes end
 # 1st arg = B2a PID
 # 2nd arg = B2b PID
 
