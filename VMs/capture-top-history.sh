@@ -12,10 +12,10 @@ TIME=$2
 i=0
 out="LVL2-top.txt"
 while kill -0 "$PID" 2>/dev/null; do
-  echo >> "$out"
-  echo "*** TIME (s) = $((i*TIME)) ***"
-	top -b -n 1 | awk -v pid="$PID" '
-    NR <= 7|| $1 == pid' >> "$out"
-	sleep "$TIME"
-  i = i + 1
+	echo >> "$out"
+ 	echo "*** TIME (s) = $((i*TIME)) ***"
+  	top -b -n 1 | awk -v pid="$PID" '
+   		NR <= 7|| $1 == pid' >> "$out"
+     	sleep "$TIME"
+      	((i++))
 done
