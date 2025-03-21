@@ -1,3 +1,12 @@
+/*
+ * This code takes in a CORE-type ELF file and outputs a file containing only the 
+ * program segment data, the only part of a memory dump that our static deduplication
+ * should be concerned with. This removes all unnecessary metadata and has the needed
+ * data right at the beginning of the file.
+ *
+ * Compiled with: gcc -o0 -o elf elf.c
+ */
+
 #include <stdio.h>
 #include <elf.h>
 #include <stdint.h>
