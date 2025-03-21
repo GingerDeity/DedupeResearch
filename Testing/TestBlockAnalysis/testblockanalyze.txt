@@ -1,0 +1,62 @@
+
+===Discovered Match===
+    Offset: 64 B
+    Length: 64 B
+    File: file.bin
+    Hash: 6
+===Established Match===
+    Offset: 0 B
+    Length: 64 B
+    File: file.bin
+    Hash: 6
+
+===Discovered Match===
+    Offset: 192 B
+    Length: 64 B
+    File: file.bin
+    Hash: 6
+===Established Match===
+    Offset: 0 B
+    Length: 64 B
+    File: file.bin
+    Hash: 6
+
+===Discovered Match===
+    Offset: 448 B
+    Length: 64 B
+    File: file.bin
+    Hash: 3
+===Established Match===
+    Offset: 256 B
+    Length: 64 B
+    File: file.bin
+    Hash: 3
+
+===Discovered Match===
+    Offset: 512 B
+    Length: 64 B
+    File: file.bin
+    Hash: 6
+===Established Match===
+    Offset: 0 B
+    Length: 64 B
+    File: file.bin
+    Hash: 6
+
+===Discovered Match===
+    Offset: 640 B
+    Length: 64 B
+    File: file.bin
+    Hash: 3
+===Established Match===
+    Offset: 256 B
+    Length: 64 B
+    File: file.bin
+    Hash: 3
+Files:          1
+Dedupe Graph:   [63.64%]
+Unique Windows: 2
+Total Data:     704 B
+Dupe Data:      448 B
+Dedupe Ratio:   63.64%
+Zero-Windows:   256 B
