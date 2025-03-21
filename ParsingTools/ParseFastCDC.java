@@ -1,3 +1,11 @@
+/*
+ * This code attempts to read the output from fastFull.sh and convert it
+ * into a csv file of dedupe ratios. I say "attempts" because as of me
+ * writing this comment (3-21-25) it doesn't work anymore. Considering that
+ * we've abandoned looking into FastCDC for some time, I haven't tried to fix
+ * this, but thought I should leave it in case you need it for later
+ */
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
