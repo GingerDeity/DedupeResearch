@@ -3,7 +3,7 @@ import java.io.RandomAccessFile;
 import java.util.*;
 import java.security.*;
 
-public class DedupeCheck3 {
+public class DedupeCheck {
 	/**
 	 *  
 	 * @param args[0] will be the window size
