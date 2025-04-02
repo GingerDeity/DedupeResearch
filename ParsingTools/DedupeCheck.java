@@ -13,6 +13,7 @@ public class DedupeCheck {
 	 *
 	 */
 	 public static void main(String[] args) throws IOException {
+		//just a simple test comment for git
 		final int W_SIZE = Integer.parseInt(args[0]);
 		boolean verbose = args[1].equals("-v");
 		try {
