@@ -61,6 +61,7 @@ public class ParseMatches {
 			Scanner findOff = new Scanner(fullOffset);
 			findOff.next();
 			long offset = Integer.parseInt(findOff.next());
+			findOff.close();
 
 			// Obtains the length of the discovered match
 			String fullLength = sc.nextLine();
@@ -68,6 +69,7 @@ public class ParseMatches {
 			Scanner findLen = new Scanner(fullLength);
 			findLen.next();
 			long length = Integer.parseInt(findLen.next());
+			findLen.close();
 
 			// Skips established match section
 			for (int i = 0; i < 7; i++) { currWrite += sc.nextLine() + "\n"; }
