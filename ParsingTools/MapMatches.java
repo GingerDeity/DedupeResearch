@@ -10,22 +10,27 @@ public class MapMatches {
         boolean errorFree = true;
         boolean parsedMatches = false;
    
-       	//Checks if the files have been parsed already	
+       	// Checks if the files have been parsed already	
         if (args.length >= 1 && args[0].equals("--assume-parsed")) {
             parsedMatches = true;
         }
 
-	//Checks that the argument length is correct
+    	// Checks that the argument length is correct
         if ((args.length % 3 == 1 && args.length >= 4) || 
             (parsedMatches && args.length % 3 == 2 && args.length >= 5)) {
 
+            /**
+             * Array that will initially contain information from program headers, and will later
+             * add in 
+             */
             Header[] maps = new Header[400];
             int mapEnd = 0;
             int i = 0;
             if (parsedMatches) { i++; }
             
+            // Iterates through the file
             for (; i <= args.length - 3 && errorFree; i += 3) {
-		//Gets the filename, associated pHdr file and memory mapping file
+		        //Gets the filename, associated pHdr file and memory mapping file
                 String fileName = args[i].substring(1, args[i].length() - 1);
                 Scanner headers = new Scanner(new File(args[i + 1]));
                 String mapsName = args[i + 2].substring(0, args[i + 2].length() - 1);
@@ -35,7 +40,7 @@ public class MapMatches {
                     + " Operations Commencing===");
                 System.out.println("    Extracting program header data...");
 
-		//Gets a hashtable of pHdrs for the fileName, each elem has key=vAddr and value=Header-object
+        		//Gets a hashtable of pHdrs for the fileName, each elem has key=vAddr and value=Header-object
                 Hashtable<String, Header> pHdrs = getHeaders(fileName, headers, parsedMatches);
 
                 if (pHdrs != null) { //Verifies pHdrs were successfully collected
@@ -53,7 +58,7 @@ public class MapMatches {
                 }
             }
             
-	    //By this point we have successfully created an array of Header objects containing their offsets in our file and memory-map names!
+	        //By this point we have successfully created an array of Header objects containing their offsets in our file and memory-map names!
             if (errorFree) {
                 System.out.println("\n===Final Mapping Operations Commencing===");
                 System.out.println("    Mapping matches data to mapped headers...");
@@ -441,14 +446,19 @@ public class MapMatches {
             this.offEnd = offEnd;            
         }
 
-        public void setFileName(String fileName) { this.fileName = fileName; }
         public String getFileName() { return fileName; }
-        public void setMapName(String mapName) { this.mapName = mapName; }
         public String getMapName() { return mapName; }
         public long getOffStart() { return offStart; }
         public long getOffEnd() { return offEnd; }
         public String getFlags() { return flags; }
         public String getVaddr() { return vAddr; }
+
+        public void setFileName(String fileName) { this.fileName = fileName; }
+        public void setMapName(String mapName) { this.mapName = mapName; }
+        public void setOffStart(long offStart) { this.offStart = offStart; }
+        public void setOffEnd(long offEnd) { this.offEnd = offEnd; }
+        public void setFlags(String flags) { this.flags = flags; }
+        public void setVaddr(String vAddr) { this.vAddr = vAddr; }
     }
 
 }
