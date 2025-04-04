@@ -5,19 +5,19 @@ This is a directory filled with a variety of incredibly helpful bash scripts. So
 Bash scripts that serve as useful shorthands, such as clearing the screen and listing contents.
 
 ### cls
-Run with `bash cls.sh`
+Run with `bash cls.sh`  
 
 A simple utility function that clears the screen, prints out a header, and lists the contents of your current directory. This version was used for when I was doing work in the Heap6 server, though it is especially helpful when you are observing multiple VMs at a time and give each VM a distinct header! In fact, each VM I use has a header.txt file that I use for this exact purpose
 
 ### psaux
-Run with `bash psaux.sh`
+Run with `bash psaux.sh`  
 
 A simple utility function that lets you more quickly identify certain processes under ps aux, a shorthand for `ps aux | grep $1`
 
 ## General Deduplication
 
 ### dedupeCheckFull
-Run with `bash dedupeCheckFull.sh $1 $2` where
+Run with `bash dedupeCheckFull.sh $1 $2` where  
 $1 is the size of the static window
 $2 will be the directory to do static-window deduplication on 
 
