@@ -328,29 +328,26 @@ public class MapMatches {
     }
 
 
-    // Links the matches in the matches file to the pHdr+maps info in the Header[] and prints out all final statistics!
     /**
-     * 
+     * Links the matches in the matches file to the pHdr+maps info in the Header[] and prints out all final statistics!
      * @param matches
      * @param maps
      * @param mapEnd
      */
     private static void matchStats(Scanner matches, Header[] maps, int mapEnd) {
-        matches.nextLine(); //Skips the first blank line in the matches file
+        matches.nextLine(); // Skips the first blank line in the matches file
         
-    	//A hashtable that will contain the number of bytes matched from a source (key is the memory map area name that the source corresponds to)
-	    Hashtable<String, Long> mappedMatches = new Hashtable<String, Long>
-            (500, (float) 0.55);
+        // Two hashtables, both of which have key="MAP-NAME [FLAGS]"
+	    Hashtable<String, Long> mappedMatches = new Hashtable<String, Long>(500, (float) 0.55); // value=number of bytes matched from a source
+        Hashtable<String, Long> mappedMisMatches = new Hashtable<String, Long>(500, (float) 0.55); // value=number of bytes where source memory name doesn't match copy's
 
-    	//A hashtable that will contain the number of bytes where the source memory area name doesn't match the copy's memory area name
-        Hashtable<String, Long> mappedMisMatches = new Hashtable<String, Long>
-            (500, (float) 0.55);
-        long bytesMisMatched = 0;
-        long total = 0;
+        long bytesMisMatched = 0; // Total bytes where source memory mapping != copy memory mapping
+        long total = 0; // Total bytes observed
 
+        // Iterate through all the matches
         while (matches.hasNext()) {
             if (matches.nextLine().equals("===Discovered Match===")) {
-	        	//These lines get (for the copy of the match) the name of the dump-file, the match's offset in the dump-file, and length of the match
+	        	// These lines get copy-match's file, file offset, and length
                 matches.next();
                 long copyOffset = Long.parseLong(matches.next());
                 matches.nextLine();
@@ -362,7 +359,7 @@ public class MapMatches {
                 
                 nextLine(matches, 3);
 
-		        //These lines get (for the source of the match) the name of the dump file and the match's offset in the dump-file offset
+	        	// These lines get source-match's file, file offset, and length
                 matches.next();
                 long sourceOffset = Long.parseLong(matches.next());
                 nextLine(matches, 2);
@@ -370,7 +367,7 @@ public class MapMatches {
                 String sourceFile = matches.next();
                 nextLine(matches, 3);
                 
-                total += bytesMatched;
+                total += bytesMatched; // Add to bytes observed
 
                 String sourceKey = null;
                 String copyKey = null;
@@ -379,10 +376,16 @@ public class MapMatches {
                 boolean alreadyFoundSource = false;
                 boolean alreadyFoundCopy = false;
 
+                /* 
+                 * Find the header that would contain this match by comparing the match's offset
+                 * to the offsets of the header
+                 */
                 for (int i = 0; i < mapEnd; i++) {
-                    //2 variables that are true (for source and copY) if:
-                    //1) the filename is the same for both the source/copy and the maps entry
-                    //2) the source/copy offset is in range of the map entry's start and end
+                    /* 
+                     * These are 2 variables that are true if:
+                     * A) the filename is the same for both the source/copy and the maps entry
+                     * B) the source/copy offset is inside the map entry's range
+                     */
                     foundSourceMap = maps[i].getFileName().equals(sourceFile)
                         && (maps[i].getOffStart() <= sourceOffset && sourceOffset <= 
                             maps[i].getOffEnd());
@@ -390,45 +393,45 @@ public class MapMatches {
                         && (maps[i].getOffStart() <= copyOffset && copyOffset <= 
                             maps[i].getOffEnd());
                     
-        		    //If we found a link between match's source and a map entry
+        		    // If we found a link between match's source and a map entry
                     if (foundSourceMap && !alreadyFoundSource) {
                         sourceKey = maps[i].getMapName() + " [" + maps[i].getFlags() + "]";
                         alreadyFoundSource = true;
                     }
                     
-		            //If we found a link between match's copy and a map entry
+		            // If we found a link between match's copy and a map entry
                     if (foundCopyMap && !alreadyFoundCopy) {
                         copyKey = maps[i].getMapName() + " [" + maps[i].getFlags() + "]";
                         alreadyFoundCopy = true;
                     }
                     
-		            //If we found map entries for both the copy and source, we can stop
+		            // If we found map entries for both the copy and source, we can stop for this match
                     if (alreadyFoundCopy && alreadyFoundSource) { break; }
                 }
                 
-        		//If we couldn't find a source link or copy link
+        		// If we couldn't find fully link a match to map regions
                 if (sourceKey == null || copyKey == null) {
                     System.out.println("ERROR, could not map match to any memory area");
                     return;
                 }
                 
-		        //If the memory area name doesn't exist in the hashtable, put it in along w the bytes matched so far
+		        // If the memory area name doesn't exist in the hashtable, put it in along w the bytes matched so far
                 if (!mappedMatches.containsKey(sourceKey)) {
                     mappedMatches.put(sourceKey, bytesMatched);
                 }
-                else { //Else, add the new bytes matched to the total
+                else { // else, add the new bytes matched to the total
                     long bytesMapped = mappedMatches.get(sourceKey);
                     bytesMapped += bytesMatched;
                     mappedMatches.replace(sourceKey, bytesMapped);
                 }
 
-        		//A mismatch if the match has matched memory from 2 different map names
+        		// A mismatch if the match has matched memory from 2 different map names
                 if (!sourceKey.equals(copyKey)) {
                     bytesMisMatched += bytesMatched;
                     String misMatchKey = "[COPY]       " + copyFile + " : " + copyKey 
                         + "\n        [SOURCE] " + sourceFile + " : " + sourceKey;
 
-                    if (!mappedMisMatches.containsKey(misMatchKey)) { //Same logic as the mappedMatched hashtable above
+                    if (!mappedMisMatches.containsKey(misMatchKey)) { // Same logic as the mappedMatched hashtable above
                         mappedMisMatches.put(misMatchKey, bytesMatched);
                     }
                     else {
@@ -438,7 +441,7 @@ public class MapMatches {
             }
         }
 
-    	//Print out information about the mismatches
+    	// Print out information about the mismatches
         Enumeration<String> iterMis = mappedMisMatches.keys();
         System.out.println("    [COPY]   Copy-Filename : Copy-Mapname [Copy-Flags]\n"
             + "        [SOURCE] Source-Filename : Source-Mapname [Source-Flags]\n        [TOTAL]  Mismatched-Bytes (%-of-mismatches)\n");
@@ -449,7 +452,7 @@ public class MapMatches {
             System.out.println("    " + key + "\n        [TOTAL]  " + misBytes + " Bytes (" + percentage + "% of mismatches)");
         }
         
-    	//Print out information about the matches
+    	// Print out information about the matches
         System.out.println("\n===All Operations Complete===");
         System.out.println("    Source-Filename : Source-Mapname [Source-Flags] : Matched-Bytes (%-of-matches)\n");
         long verifyTotal = 0;
@@ -463,7 +466,7 @@ public class MapMatches {
             verifyTotal += duped;
         }
         
-	    //One final verification that we got data for ALL the matches
+	    // One final verification that we got data for ALL the matches
         if (total != verifyTotal) {
             System.out.println("ERROR, total amount of bytes duplicated differs "
                 + "between what matches.txt (" + total + "B) and what our code "
@@ -471,7 +474,7 @@ public class MapMatches {
             return;
         }
         
-    	//Print out final duped amounts
+    	// Print out final duped amounts
         System.out.println("\n===Final Statistics===");
         System.out.println("    " + total + " bytes duped");
         System.out.println("    " + bytesMisMatched + " bytes where the source's mapped name "
