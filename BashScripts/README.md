@@ -18,39 +18,39 @@ A simple utility function that lets you more quickly identify certain processes 
 
 ### dedupeCheckFull
 Run with `bash dedupeCheckFull.sh $1 $2` where  
-$1 is the size of the static window
-$2 will be the directory to do static-window deduplication on 
+$1 is the size of the static window  
+$2 will be the directory to do static-window deduplication on  
 
-This code outputs all possible static deduplication results up to two files in a directory. So, for a directory named "example" that contains files A, B, C, running `bash dedupeCheckFull.sh 4096 example/` would output 4KB deduplication results for [(A), (A, B), (A, C), (B), (B, C), (C)]
+This code outputs all possible static deduplication results up to two files in a directory. So, for a directory named "example" that contains files A, B, C, running `bash dedupeCheckFull.sh 4096 example/` would output 4KB deduplication results for [(A), (A, B), (A, C), (B), (B, C), (C)]  
 
 ### dedupeCheckList
 Run with `bash dedupeCheckList.sh $1 $2 $3` where  
-$1 is the size of the static window
-$2 will be the base file to compare all others too
-$3 will be directory to do static-window deduplication on
+$1 is the size of the static window  
+$2 will be the base file to compare all others too  
+$3 will be directory to do static-window deduplication on  
 
-This code outputs static deduplication results for a base file compared to all other files in a directory. For instance, if we run this on a directory named 'example' containing files A, B, C, using the command: `bash dedupeCheckList.sh 4096 A example/`, this outputs results for: [(A), (A, B), (A, C)]
+This code outputs static deduplication results for a base file compared to all other files in a directory. For instance, if we run this on a directory named 'example' containing files A, B, C, using the command: `bash dedupeCheckList.sh 4096 A example/`, this outputs results for: [(A), (A, B), (A, C)]  
 
 ### fastFull
 Run with `bash fastFull.sh $1` where  
-$1 will be directory to do FastCDC deduplication on
+$1 will be directory to do FastCDC deduplication on  
 
-This code outputs all possible FastCDC deduplication results up to two files in a directory. So, for a directory named "example" that contains files A, B, C, running: `bash fastFull.sh example/` would output FastCDC deduplication results for: [(A), (A, B), (A, C), (B), (B, C), (C)]. You can modify the parameters of the FastCDC deduplication inside the script.
+This code outputs all possible FastCDC deduplication results up to two files in a directory. So, for a directory named "example" that contains files A, B, C, running: `bash fastFull.sh example/` would output FastCDC deduplication results for: [(A), (A, B), (A, C), (B), (B, C), (C)]. You can modify the parameters of the FastCDC deduplication inside the script.  
 
 ### map_and_core
 Run with `bash map_and_core.sh $1 $2` where  
-$1 is a process PID
-$2 is the output files' prefix
+$1 is a process PID  
+$2 is the output files' prefix  
 
-Gets both the memory mapping file and core dump file of a PID, which is helpful for getting the files necessary for `ParsingTools/MapMatches.java`
+Gets both the memory mapping file and core dump file of a PID, which is helpful for getting the files necessary for `ParsingTools/MapMatches.java`  
 
 
 ## KSM
-These are scripts that are to be used in KSM experiments. A typical experiment with KSM will involve running the scripts in the following order:
-1) `bash ksminit.sh` to initialize the KSM service
-2) `bash ksmstart.sh` to start the KSM service
-3) `bash ksmwatch.sh` to observe the KSM service
-4) `bash ksmend.sh` to end the KSM service
+These are scripts that are to be used in KSM experiments. A typical experiment with KSM will involve running the scripts in the following order:  
+1) `bash ksminit.sh` to initialize the KSM service  
+2) `bash ksmstart.sh` to start the KSM service  
+3) `bash ksmwatch.sh` to observe the KSM service  
+4) `bash ksmend.sh` to end the KSM service  
 
 It's important to note that your Linux kernel will be to be at least version 2.6.32, though later versions will be needed for fields such as `ksm_zero_pages`.
 
