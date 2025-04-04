@@ -24,7 +24,7 @@ $2 will be the directory to do static-window deduplication on
 This code outputs all possible static deduplication results up to two files in a directory. So, for a directory named "example" that contains files A, B, C, running `bash dedupeCheckFull.sh 4096 example/` would output 4KB deduplication results for [(A), (A, B), (A, C), (B), (B, C), (C)]
 
 ### dedupeCheckList
-Run with `bash dedupeCheckList.sh $1 $2 $3` where
+Run with `bash dedupeCheckList.sh $1 $2 $3` where  
 $1 is the size of the static window
 $2 will be the base file to compare all others too
 $3 will be directory to do static-window deduplication on
@@ -32,13 +32,13 @@ $3 will be directory to do static-window deduplication on
 This code outputs static deduplication results for a base file compared to all other files in a directory. For instance, if we run this on a directory named 'example' containing files A, B, C, using the command: `bash dedupeCheckList.sh 4096 A example/`, this outputs results for: [(A), (A, B), (A, C)]
 
 ### fastFull
-Run with `bash fastFull.sh $1` where
+Run with `bash fastFull.sh $1` where  
 $1 will be directory to do FastCDC deduplication on
 
 This code outputs all possible FastCDC deduplication results up to two files in a directory. So, for a directory named "example" that contains files A, B, C, running: `bash fastFull.sh example/` would output FastCDC deduplication results for: [(A), (A, B), (A, C), (B), (B, C), (C)]. You can modify the parameters of the FastCDC deduplication inside the script.
 
 ### map_and_core
-Run with `bash map_and_core.sh $1 $2` where
+Run with `bash map_and_core.sh $1 $2` where  
 $1 is a process PID
 $2 is the output files' prefix
 
@@ -59,26 +59,26 @@ https://docs.kernel.org/admin-guide/mm/ksm.html
 https://docs.kernel.org/mm/ksm.html
 
 ### ksminit
-Run with `bash ksminit.sh`
+Run with `bash ksminit.sh`  
 
 Initializes KSM to not merge zero-pages, scan 500,000 pages at a time, and ensures KSM isn't running.
 
 ### ksmstart
-Run with `bash ksmstart.sh`
+Run with `bash ksmstart.sh`  
 
 Tells KSM to begin merging pages.
 
 ### ksmwatch
-Run with `bash ksmwatch.sh`
+Run with `bash ksmwatch.sh`  
 
 Prints out all KSM contents to the screen every second, and can be ended with Ctrl+C.
 
 ### ksmend
-Run with `bash ksmend.sh`
+Run with `bash ksmend.sh`  
 
 Tells KSM to stop merging pages.
 
 ### ksmls
-Run with `bash ksmls.sh`
+Run with `bash ksmls.sh`  
 
 Prints out all KSM contents to the screen only once.
