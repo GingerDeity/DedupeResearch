@@ -53,5 +53,6 @@ public class ParseFastCDC {
             nextDump = "";
         }
         writer.close();
+        sc.close();
     }
 }
