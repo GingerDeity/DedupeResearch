@@ -7,10 +7,10 @@ You will need to have >= Python 3.9, and instructions for installing PyTorch can
 
 ## Running Experiments
 To run experiments using image recognition neural networks, run the command `python3 imageRecog.py $1 $2 $3` where  
-$1 is the model for the neural network, of which options can be found here: https://pytorch.org/vision/stable/models.html  
-* Our experiments always used either 'alexnet', 'densenet121', 'resnet18', or 'googlenet'
-$2 is the image to process, with choices found in the photos directory  
-$3 is an optional argument, allowing you to specify the filename for a core dump and memory-mapping file
+* $1 is the model for the neural network, of which options can be found here: https://pytorch.org/vision/stable/models.html  
+  * Our experiments always used either 'alexnet', 'densenet121', 'resnet18', or 'googlenet'
+* $2 is the image to process, with choices found in the photos directory  
+* $3 is an optional argument, allowing you to specify the filename for a core dump and memory-mapping file
 
 For instance, obtaining a core dump of an alexnet model working on a picture of a bed would use the command `python3 imageRecog.py alexnet photos/bed.jpg bedResult`  
 
