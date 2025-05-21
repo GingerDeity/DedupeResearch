@@ -51,16 +51,13 @@ This is code is typically used for verifying static-window deduplication output 
 * $3 is an optional output file name
 
 #### Map Matches
-Easily one of my favorite pieces of code I've written for this research, capable of determining what percent of matches from a run of DedupeCheck come from what memory regions (including heap, stack, shared libraries, anonymous, and more)! This is code takes in three different types of files:
-* The static-window matches information text file
-* The program header information text file (obtained by running `readelf -l` on a memory dump that was used in `DedupeCheck`)
-* The memory mapping file (obtained from the text file output from `map_and_core.sh`)
-
-Run using `java MapMatches [--assume-parsed] {filename.type: program_headers.txt proc/PID/maps.txt} matches.txt` where 
-* {filename: program_headers.txt proc/PID/maps.txt} is repeated for each unique file present in the matches.txt file 
-  * filename: a filename present in matches.txt
-  * program_headers.txt: a text file corresponding to the file named, produced from 'readelf -l'
-  * proc/PID/maps.txt: a text file corresponding to the file named, produced from 'cat /proc/PID/maps'
+Easily one of my favorite pieces of code I've written for this research, capable of determining what percent of matches from a run of DedupeCheck come from what memory regions (including heap, stack, shared libraries, anonymous, and more)! Run using `java MapMatches [--assume-parsed] {filename.type: program_headers.txt maps.txt} matches.txt` where
+* `matches.txt` is the text file of static-window deduplication matches information
+* `{filename: program_headers.txt proc/PID/maps.txt}` is repeated for each unique file present in `matches.txt` **(yes, include the curly braces and semicolon)**
+  * `filename`: a filename present in `matches.txt`
+  * `program_headers.txt`: a text file of program header information for `filename`, produced by running `readelf -l` on `filename`
+  * `maps.txt`: a text file of memory mapping information for `filename`, aka the text file output from `map_and_core.sh`
+* `[--assume-parsed]` tells the code that the files in `matches.txt` are outputs of our `elf` code, meaning they have no metadata. This means the file offsets referred to in `matches.txt` will differ from the file offsets in each `program_headers.txt`, which can result in inaccurate mapping to memory areas in `maps.txt` if this option is not specified  
 
 ### Folder-Wide Deduplication
 To quickly do deduplication over an entire folder without listing every file, you can use either `DedupeCheckFull.sh`, `DedupeCheckList.sh`, or `FastFull.sh` (if you have fastcdc installed)
