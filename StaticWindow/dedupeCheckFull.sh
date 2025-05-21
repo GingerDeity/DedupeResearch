@@ -2,7 +2,7 @@
 # This code takes in both the window size and a directory to conduct static deduplication on.
 # This outputs all possible static deduplication results up to two files. So, for a
 # directory named "example" that contains files A, B, C, running:
-# "bash dedupeCheckFull.sh 4096 example/" would output 4KB deduplication results for:
+# "bash DedupeCheckFull.sh 4096 example/" would output 4KB deduplication results for:
 # [(A), (A, B), (A, C), (B), (B, C), (C)] 
 # $1 is window size, $2 will be the directory to do DedupeCheck on 
 
