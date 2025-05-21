@@ -51,9 +51,9 @@ This is code is typically used for verifying static-window deduplication output 
 * $3 is an optional output file name
 
 #### Map Matches
-Easily one of my favorite pieces of code I've written for this research, capable of determining what percent of matches from a run of DedupeCheck come from what memory regions (including heap, stack, shared libraries, anonymous, and more)! Run using `java MapMatches [--assume-parsed] {filename.type: program_headers.txt maps.txt} matches.txt` where
+One of my favorite pieces of code I've written, this can determine what percent of `DedupeCheck` matches come from what memory regions (including heap, stack, shared libraries, anonymous, etc)! Run using `java MapMatches [--assume-parsed] {filename.type: program_headers.txt maps.txt} matches.txt` where
 * `matches.txt` is the text file of static-window deduplication matches information
-* `{filename: program_headers.txt proc/PID/maps.txt}` is repeated for each unique file present in `matches.txt` **(yes, include the curly braces and semicolon)**
+* `{filename: program_headers.txt maps.txt}` is repeated for each unique file present in `matches.txt` **(yes, include the curly braces and semicolon)**
   * `filename`: a filename present in `matches.txt`
   * `program_headers.txt`: a text file of program header information for `filename`, produced by running `readelf -l` on `filename`
   * `maps.txt`: a text file of memory mapping information for `filename`, aka the text file output from `map_and_core.sh`
