@@ -93,11 +93,11 @@ Run with `bash FastFull.sh $1` where
 This code outputs all possible FastCDC deduplication results up to two files in a directory. So, for a directory named "example" that contains files A, B, C, running: `bash FastFull.sh example/` would output FastCDC deduplication results for: [(A), (A, B), (A, C), (B), (B, C), (C)]. You can modify the parameters of the FastCDC deduplication inside the script.  
 
 ## KSM
-This folder contains all code relating to KSM experiments. I'll first go over the general experiment processes. It's important to note that your Linux kernel will be to be at least version 2.6.32, though later versions will be needed for fields such as `ksm_zero_pages`, which are also crucial for meaningful deduplication data
+This folder contains all code relating to KSM experiments. I'll first go over the general experiment processes. It's important to note that your Linux kernel will be to be at least version 2.6.32, though later versions will be needed for fields such as `ksm_zero_pages`, which are also crucial for meaningful deduplication data. It's also worth noting that while VMs can be used for both static window and KSM, you will definitely be using them most for KSM. The included VM will already be up-to-date.
 
 Some helpful links for learning:  
-https://docs.kernel.org/admin-guide/mm/ksm.html
-https://docs.kernel.org/mm/ksm.html
+https://docs.kernel.org/admin-guide/mm/ksm.html  
+https://docs.kernel.org/mm/ksm.html  
 
 ### Essential Scripts
 #### ksminit
@@ -119,8 +119,37 @@ Prints out all KSM contents to the screen only once. Run with `bash ksmls.sh`
 1) Set up a LVL-1 VM environment for KSM to run from
 2) Set at least 1 LVL-2 VM environment for KSM to monitor
 3) Set up processes that will run in LVL-2 environment(s)
-4) In your LVL-1 VM...  
-   a. `bash ksminit.sh` will initialize KSM values  
+4) In LVL-2 VMs run `./zero_memory` (explained in VM section)
+4) In your LVL-1 VM, the KSM cycle is:  
+   a. `bash ksminit.sh` will initialize KSM values (only need to do once per active tmux session)  
    b. `bash ksmstart.sh` to start running KSM  
    c. `bash ksmwatch.sh` to observe KSM values  
    d. `bash ksmend.sh` to stop running KSM  
+
+## VMs
+VMs are very important for distributing your work, and are very crucial for KSM experiments. There is a zip file containing a bare-bones version of the VM image file I used for my experiments, you'll need to increase the disk-space, RAM, and CPUs as needed for your own devices. After tailoring the IMG file to your needs, you can use this as a LVL-1 VM and scp a copy of that same IMG file into the VM itself to create LVL-2 VMs. There are 2 steps to usinga  VM, booting it up, then scp'ing into it.  
+
+To intialize and connect via SSH into a VM, here's the general process:
+1) Create and attach to a tmux session using "tmux new -s name", "tmux a"
+2) In one window, call the correct `setup-*.sh` script
+3) In another window, call the respective `connect-*.sh` script. This won't allow for a connection until the VM has fully booted up. In my setup I usually had to wait up to 5-10 minutes for a complete LVL-2 boot-up.
+4) Once the VM has finished booting up, you'll be able to SSH in!  
+
+The username and password for this VM is josh and admin respectively.
+
+VM tree structure:
+              Host
+        /            \
+      KSM-A          KSM-B
+     /      \       /     \
+  A2a       A2b    B2a    B2b
+
+MONITOR/NET Ports:
+Host
+|- KSM-A=10023/1235
+|  |- KSM-A2a=10024/1235
+|  |- KSM-A2b=10025/1236
+|
+|- KSM-B=10026/1237
+|  |- KSM-B2a=10027/1237
+|  |- KSM-B2b=10028/1238
