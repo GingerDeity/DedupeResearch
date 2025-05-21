@@ -19,17 +19,17 @@ The following sections describe additional analysis tools for parsed memory dump
 #### Block Analysis
 This code will look at all the matches from a static window code and return a CDF list of the number of matches within certain ranges of bytes from each other. Simply perform steps 1-3 for a general experiment, then run the necessary command for obtaining a text file of static-window matches, then run `python3 blockanalyze.py output.txt`  
   
-#### Folder-Wide Deduplication
+### Folder-Wide Deduplication
 To quickly do deduplication over an entire folder without listing every file, you can use either `DedupeCheckFull.sh`, `DedupeCheckList.sh`, or `FastFull.sh` (if you have fastcdc installed)
 
-##### DedupeCheckFull
+#### DedupeCheckFull
 Run with `bash DedupeCheckFull.sh $1 $2` where  
 $1 is the window size  
 $2 will be the directory to do static-window deduplication on  
 
 This code outputs all possible static deduplication results up to two files in a directory. So, for a directory named "example" that contains files A, B, C, running `bash DedupeCheckFull.sh 4096 example/` would output 4KB deduplication results for [(A), (A, B), (A, C), (B), (B, C), (C)]  
 
-### DedupeCheckList
+#### DedupeCheckList
 Run with `bash DedupeCheckList.sh $1 $2 $3` where  
 $1 is the window size  
 $2 will be the base file to compare all others too  
@@ -37,7 +37,7 @@ $3 will be directory to do static-window deduplication on
 
 This code outputs static deduplication results for a base file compared to all other files in a directory. For instance, if we run this on a directory named 'example' containing files A, B, C, using the command: `bash DedupeCheckList.sh 4096 A example/`, this outputs results for: [(A), (A, B), (A, C)]  
 
-### FastFull
+#### FastFull
 Run with `bash FastFull.sh $1` where  
 $1 will be directory to do FastCDC deduplication on  
 
