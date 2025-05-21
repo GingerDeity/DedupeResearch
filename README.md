@@ -39,25 +39,26 @@ For multiple processes, simply repeat steps 1-3 for each process and then run `D
   
 
 ### Extra Analysis
-The following sections describe additional analysis tools for parsed memory dumps, which will generally require a text file containing information from all static-window matches, which can be done through steps 1-3 above, then `java DedupeCheck $1 -v $2 >> output.txt` where `output.txt` will contain the matches information  
+The following sections describe additional analysis tools for parsed memory dumps, which will generally require a text file containing information from all static-window matches, which can be done through steps 1-3 above, then `java DedupeCheck $1 -v $2 >> output.txt` where `output.txt` will contain the matches information. For simplicity's sake, we'll be referring to this as a 'matches file' from here on.  
   
 #### Block Analysis
-This code will look at all the matches from a static window code and return a CDF list of the number of matches within certain ranges of bytes from each other. Simply run `python3 blockanalyze.py output.txt` where `output.txt` is the text file containing the matches information
-  
+This code will look at all the static window matches and return a CDF list of the number of matches within certain ranges of bytes from each other. Simply run `python3 blockanalyze.py $1` where  
+* $1 is a matches file
+
 #### Parse Matches
 This is code is typically used for verifying static-window deduplication output by reporting back how many matches are aligned with a certain user-determined number, or the same size as the user-defined number. For instance, if the user inputs `64`, it reports information about how many matches are 64B-aligned or 64B in size. Run the code using `java ParseMatches $1 $2 $3` where  
 * $1 is the window-size/alignment
-* $2 is the text file of static-window matches
+* $2 is a matches file
 * $3 is an optional output file name
 
 #### Map Matches
 One of my favorite pieces of code I've written, this can determine what percent of `DedupeCheck` matches come from what memory regions (including heap, stack, shared libraries, anonymous, etc)! Run using `java MapMatches [--assume-parsed] {filename.type: program_headers.txt maps.txt} matches.txt` where
-* `matches.txt` is the text file of static-window deduplication matches information
+* `matches.txt` is a matches file
 * `{filename: program_headers.txt maps.txt}` is repeated for each unique file present in `matches.txt` **(yes, include the curly braces and semicolon)**
   * `filename`: a filename present in `matches.txt`
   * `program_headers.txt`: a text file of program header information for `filename`, produced by running `readelf -l` on `filename`
   * `maps.txt`: a text file of memory mapping information for `filename`, aka the text file output from `map_and_core.sh`
-* `[--assume-parsed]` tells the code that the files in `matches.txt` are outputs of our `elf` code, meaning they have no metadata. This means the file offsets referred to in `matches.txt` will differ from the file offsets in each `program_headers.txt`, which can result in inaccurate mapping to memory areas in `maps.txt` if this option is not specified  
+* `[--assume-parsed]` specifies that the files in `matches.txt` are outputs of our `elf` code, meaning they have no metadata. This means the file offsets referred to in `matches.txt` will differ from the file offsets in each `program_headers.txt`, which can result in inaccurate mapping to the memory areas in `maps.txt` if this option is not specified  
 
 ### Folder-Wide Deduplication
 To quickly do deduplication over an entire folder without listing every file, you can use either `DedupeCheckFull.sh`, `DedupeCheckList.sh`, or `FastFull.sh` (if you have fastcdc installed)
