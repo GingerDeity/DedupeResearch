@@ -5,7 +5,7 @@ import java.io.RandomAccessFile;
 import java.util.StringTokenizer;
 
 /**
- * This takes in a file you can obtain from dedupeCheckFull.sh or dedupeCheckList.sh without -v flag
+ * This takes in a file you can obtain from DedupeCheckFull.sh or DedupeCheckList.sh without -v flag
  * and allows you to pick a key that can be converted into a CSV file! Please note,
  * this code is NOT efficient. This was made at a time where I was working on a bunch of
  * other stuff, and I just needed this tool to be accurate, not efficient. Fortunately,
