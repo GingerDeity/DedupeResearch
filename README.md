@@ -95,42 +95,32 @@ This code outputs all possible FastCDC deduplication results up to two files in 
 ## KSM
 This folder contains all code relating to KSM experiments. I'll first go over the general experiment processes. It's important to note that your Linux kernel will be to be at least version 2.6.32, though later versions will be needed for fields such as `ksm_zero_pages`, which are also crucial for meaningful deduplication data
 
-Some helpful links for learning:
+Some helpful links for learning:  
 https://docs.kernel.org/admin-guide/mm/ksm.html
 https://docs.kernel.org/mm/ksm.html
+
+### Essential Scripts
+#### ksminit
+Initializes KSM to not merge zero-pages, scan 500,000 pages at a time, and ensures KSM isn't running. Run with `bash ksminit.sh`  
+
+#### ksmstart
+Tells KSM to begin merging pages. Run with `bash ksmstart.sh`  
+
+#### ksmwatch
+Prints out all KSM contents to the screen every second, and can be ended with Ctrl+C. Run with `bash ksmwatch.sh`  
+
+#### ksmend
+Tells KSM to stop merging pages. Run with `bash ksmend.sh`  
+
+#### ksmls
+Prints out all KSM contents to the screen only once. Run with `bash ksmls.sh`  
 
 ### General Experiment Process
 1) Set up a LVL-1 VM environment for KSM to run from
 2) Set at least 1 LVL-2 VM environment for KSM to monitor
 3) Set up processes that will run in LVL-2 environment(s)
 4) In your LVL-1 VM...  
-  a) `bash ksminit.sh` will initialize KSM values  
-  b) `bash ksmstart.sh` to start running KSM  
-  c) `bash ksmwatch.sh` to observe KSM values  
-  d) `bash ksmend.sh` to stop running KSM  
-
-
-### ksminit
-Run with `bash ksminit.sh`  
-
-Initializes KSM to not merge zero-pages, scan 500,000 pages at a time, and ensures KSM isn't running.
-
-### ksmstart
-Run with `bash ksmstart.sh`  
-
-Tells KSM to begin merging pages.
-
-### ksmwatch
-Run with `bash ksmwatch.sh`  
-
-Prints out all KSM contents to the screen every second, and can be ended with Ctrl+C.
-
-### ksmend
-Run with `bash ksmend.sh`  
-
-Tells KSM to stop merging pages.
-
-### ksmls
-Run with `bash ksmls.sh`  
-
-Prints out all KSM contents to the screen only once.
+   a. `bash ksminit.sh` will initialize KSM values  
+   b. `bash ksmstart.sh` to start running KSM  
+   c. `bash ksmwatch.sh` to observe KSM values  
+   d. `bash ksmend.sh` to stop running KSM  
