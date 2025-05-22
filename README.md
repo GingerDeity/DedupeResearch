@@ -93,11 +93,11 @@ Run with `bash FastFull.sh $1` where
 This code outputs all possible FastCDC deduplication results up to two files in a directory. So, for a directory named "example" that contains files A, B, C, running: `bash FastFull.sh example/` would output FastCDC deduplication results for: [(A), (A, B), (A, C), (B), (B, C), (C)]. You can modify the parameters of the FastCDC deduplication inside the script.  
 
 ## KSM
-This folder contains all code relating to KSM experiments. I'll first go over the general experiment processes. It's important to note that your Linux kernel will be to be at least version 2.6.32, though later versions will be needed for fields such as `ksm_zero_pages`, which are also crucial for meaningful deduplication data. It's also worth noting that while VMs can be used for both static window and KSM, you will definitely be using them the most for KSM. The included VM will already be up-to-date.
+This folder contains all code relating to KSM experiments. I'll first go over the general experiment processes. It's important to note that your Linux kernel will be to be at least version 2.6.32, though later versions will be needed for fields such as `ksm_zero_pages`, which are also crucial for meaningful deduplication data. It's also worth noting that while VMs can be used for both static window and KSM, you will definitely be using them the most for KSM. The included VM will already be up-to-date. For future reference, it's important to know there is commonly a hierarchy of VMs, where KSM is run in the highest level (LVL-1) and merging pages in the lower-level VMs (LVL-2 VMs).
 
 Some helpful links for learning:  
-https://docs.kernel.org/admin-guide/mm/ksm.html  
-https://docs.kernel.org/mm/ksm.html  
+* https://docs.kernel.org/admin-guide/mm/ksm.html  
+* https://docs.kernel.org/mm/ksm.html  
 
 ### Essential Scripts
 #### ksminit
@@ -119,7 +119,11 @@ Prints out all KSM contents to the screen only once. Run with `bash ksmls.sh`
 For KSM experiments, we're usually interested zero-data, duplicate data, VM resident-size (RES), and process RESs. To effectively capture all the data, we'll need some windows holding KSM data, other windows holding `top` information, and other windows holding VM information. For this reason, tmux is a very important tool for easily having multiple shell environments on screen. Here are 2 images that show my general tmux setup for 1 and 2 VMs:
 
 ![screenshot](Images/1VM.png)
+  
+It's a bit tricky to see, but there are 2 small windows at the very top which are running the boot-up for the LVL-1 and LVL-2 VMs (more on that later). After that, on the far right there's a window showing `ksmwatch` information (which tells us the zero data and duped data), and the 3 windows to the left (from top to bottom) is the LVL-2 VM's process running, LVL-2 VM's `top` information (which tells us the process RES), and LVL-1 VM's `top` information (which tells us the VM RES). Here's another screenshot showing the setup for 2 VMs:
 
+![screenshot](Images/2VMs.png)
+  
 
 1) Set up a LVL-1 VM environment for KSM to run from
 2) Set at least 1 LVL-2 VM environment for KSM to monitor
