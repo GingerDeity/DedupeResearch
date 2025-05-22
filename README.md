@@ -126,7 +126,7 @@ It's a bit tricky to see, but there are 2 small windows at the very top which ar
   
 Similarly, there are 3 small windows at the very top which are running the boot-up for the LVL-1 and LVL-2 VMs (more on that later). Below that, the 2 windows left-to-right are the LVL-2 VMs. Under that, there are the 2 windows for each LVL-2 VM's `top` information. Finally, left-to-right, there are windows showing LVL-1 VM's `top` information and another showing `ksmwatch` information.  
 
-As for the general process of an experiment:  
+As for the general process of an experiment:
 1) Set up a LVL-1 VM environment for KSM to run from
 2) Set at least 1 LVL-2 VM environment for KSM to monitor
 3) Set up processes that will run in the LVL-2 environment(s)
@@ -140,12 +140,43 @@ As for the general process of an experiment:
 ## VMs
 VMs are very important for distributing your work, and are very crucial for KSM experiments. There is a zip file containing a bare-bones version of the VM image file I used for my experiments, you'll need to increase the disk-space, RAM, and CPUs as needed for your own devices. After tailoring the IMG file to your needs, you can use this as a LVL-1 VM and scp a copy of that same IMG file into the VM itself to create LVL-2 VMs. There are 2 steps to using a VM: booting it up, then scp'ing into it. We'll first go over the essential code for VMs and certain KSM experiments.
 
+### Hierarchy
+The following code section goes on the following assumption of VM tree hierarchy:  
+             Host  
+            /     \  
+          /         \  
+         /           \  
+      KSM-A          KSM-B  
+     /      \       /     \  
+  A2a       A2b    B2a    B2b  
+  
+Where KSM-A and KSM-B are LVL-1 VMs, and A2a, A2b, B2a, and B2b are LVL-2 VMs. Designated scripts for both booting up each VM and connecting to them have already been provided. You'll notice the following hierarchy of MONITOR and NET values in each setup script:  
+MONITOR/NET Ports:  
+Host  
+|- KSM-A=10023/1235  
+|  |- KSM-A2a=10024/1235  
+|  |- KSM-A2b=10025/1236  
+|  
+|- KSM-B=10026/1237  
+|  |- KSM-B2a=10027/1237  
+|  |- KSM-B2b=10028/1238  
+
+The subfolders in this VMs folder is organized based on where each script should be located. The Host folder contains all code that should be located in the Host machine, the LVL-A1 folder corresponds to code that should exist in KSM-A, LVL-B1 correlates to KSM-B, and LVL-2 correlates to code that can exist in any LVL-2 VM.  
+
 ### Essential Code
+#### Setup Scripts
+
+
+#### Connecting Scripts
+
+
 #### Zero Memory
 This code allocates a user-specified number of bytes and fills them with zeroes. Run using `./zero_memory $1` where
-* $1 is the number of bytes to zero
+* $1 is the number of bytes to zero-out
 
 This is especially helpful in conjunction with experiments involving virtual machines, as these can contain a great deal of nonzero freed memory at any given. Typically, you would run this code on a virtual machine you're about to measure, zeroing out either all the available memory or all the free memory (both amounts can be seen in `top`).
+
+#### Capture Scripts
 
 
 To initialize and connect via SSH into a VM, here's my general process:
@@ -156,20 +187,3 @@ To initialize and connect via SSH into a VM, here's my general process:
 5) Once the VM has finished booting up, you'll be able to SSH in!  
   
 The username and password for the VM is josh and admin respectively.  
-
-VM tree structure:
-              Host
-        /            \
-      KSM-A          KSM-B
-     /      \       /     \
-  A2a       A2b    B2a    B2b
-
-MONITOR/NET Ports:
-Host
-|- KSM-A=10023/1235
-|  |- KSM-A2a=10024/1235
-|  |- KSM-A2b=10025/1236
-|
-|- KSM-B=10026/1237
-|  |- KSM-B2a=10027/1237
-|  |- KSM-B2b=10028/1238
