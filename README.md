@@ -124,7 +124,9 @@ It's a bit tricky to see, but there are 2 small windows at the very top which ar
 
 ![screenshot](Images/2VMs.png)
   
+Similarly, there are 3 small windows at the very top which are running the boot-up for the LVL-1 and LVL-2 VMs (more on that later). Below that, the 2 windows left-to-right are the LVL-2 VMs. Under that, there are the 2 windows for each LVL-2 VM's `top` information. Finally, left-to-right, there are windows showing LVL-1 VM's `top` information and another showing `ksmwatch` information.  
 
+As for the general process of an experiment:  
 1) Set up a LVL-1 VM environment for KSM to run from
 2) Set at least 1 LVL-2 VM environment for KSM to monitor
 3) Set up processes that will run in the LVL-2 environment(s)
