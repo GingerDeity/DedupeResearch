@@ -1,5 +1,5 @@
 # DedupeResearch
-This is the github for as much of my deduplication research as I could fit! There are 3 major folders: VMs, StaticWindow, and KSM. It's worth noting that you should install tmux in your shell environment if you haven't already, as it will be an immensely helpful tool.
+This is the github for as much of my deduplication research as I could fit! There are 3 major folders: VMs, StaticWindow, and KSM. It's worth noting that you should install tmux in your shell environment if you haven't already, as it will be an immensely helpful tool. It's worth noting that many of the `bash` scripts are used so often, I typically include them in my environment's `.bashrc` as aliases for quicker access.
 
 ## Static Window
 This folder contains all code relating to static window experiments, using code I wrote. I'll first go over some of the essential pieces of code, then general experiment processes.
@@ -116,7 +116,7 @@ Tells KSM to stop merging pages. Run with `bash ksmend.sh`
 Prints out all KSM contents to the screen only once. Run with `bash ksmls.sh`  
 
 ### General Experiment Process
-For KSM experiments, we're usually interested zero-data, duplicate data, VM resident-size (RES), and process RESs. To effectively capture all the data, we'll need some windows holding KSM data, other windows holding `top` information, and other windows holding VM information. For this reason, tmux is a very important tool for easily having multiple shell environments on screen. Here are 2 images that show my general tmux setup for 1 and 2 VMs:
+For KSM experiments, we're usually interested zero-data, duplicate data, VM resident-size (RES), and process RESs. To effectively capture all the data, we'll need some windows holding KSM data, other windows holding `top` information, and other windows holding VM information. For this reason, tmux is a very important tool for easily having multiple shell environments on screen. Here's an image that show my general tmux setup for 1 VM:
 
 ![screenshot](Images/1VM.png)
   
@@ -131,14 +131,15 @@ As for the general process of an experiment:
 2) Set at least 1 LVL-2 VM environment for KSM to monitor
 3) Set up processes that will run in the LVL-2 environment(s)
 4) In LVL-2 VMs run `./zero_memory` (explained in VM section)
-4) In your LVL-1 VM, the KSM cycle is:  
+5) In your LVL-1 VM, the KSM cycle is:  
    a. `bash ksminit.sh` will initialize KSM values (only need to do once per active tmux session)  
    b. `bash ksmstart.sh` to start running KSM  
-   c. `bash ksmwatch.sh` to observe KSM values  
-   d. `bash ksmend.sh` to stop running KSM  
+   c. `bash ksmwatch.sh` to observe KSM values while the process runs  
+   d. `bash ksmend.sh` to stop running KSM when you're satisfied  
 
 ## VMs
-VMs are very important for distributing your work, and are very crucial for KSM experiments. There is a zip file containing a bare-bones version of the VM image file I used for my experiments, you'll need to increase the disk-space, RAM, and CPUs as needed for your own devices. After tailoring the IMG file to your needs, you can use this as a LVL-1 VM and scp a copy of that same IMG file into the VM itself to create LVL-2 VMs. There are 2 steps to using a VM: booting it up, then scp'ing into it. We'll first go over the essential code for VMs and certain KSM experiments.
+VMs are very important for distributing your work, and are very crucial for KSM experiments. There is a zip file containing a bare-bones version of the VM image file I used for my experiments, 
+and ***the username and password for the VM is josh and admin respectively.*** you'll need to increase the disk-space, RAM, and CPUs as needed for your own devices. After tailoring the IMG file to your needs, you can use this as a LVL-1 VM and scp a copy of that same IMG file into the VM itself to create LVL-2 VMs. There are 2 steps to using a VM: booting it up, then scp'ing into it. We'll first go over the essential code for VMs and certain KSM experiments.  
 
 ### Hierarchy
 The following code section goes on the following assumption of VM tree hierarchy:  
@@ -168,10 +169,10 @@ The subfolders in this VMs folder is organized based on where each script should
 These scripts correlate to booting up a VM. If you're looking to change a VM's fields such as `MEMSIZE`, `NUMCPUS`, `IMG`, `MONITOR`, `NET`, `LOG`. Run each script using `bash setup-*.sh` where `*` is a substitute character.
 
 #### Connecting Scripts
-These scripts are what actually connect to the VM once they're fully booted up. Run each script using `bash connect-*.sh`
+These scripts are what actually connect to the VM once they're fully booted up. Run each script using `bash connect-*.sh` where `*` is a substitute character
 
 #### Zero Memory
-This code allocates a user-specified number of bytes and fills them with zeroes. Run using `./zero_memory $1` where
+This code allocates a user-specified number of bytes and fills them with zeroes. Run using `./zero_memory $1` where 
 * $1 is the number of bytes to zero-out
 
 This is especially helpful as these can contain a great deal of nonzero freed memory at any given. Typically, you would run this code on a VM you're about to measure, zeroing out either all the available memory or all the free memory (both amounts can be seen in that VM's `top`)
@@ -179,12 +180,12 @@ This is especially helpful as these can contain a great deal of nonzero freed me
 #### Capture Scripts
 These scripts are capable of capturing `top` and `ksmwatch` information pertaining to VMs of interest (assuming the same connecting addresses, usernames, and passwords as the hierarchy above describes). Remember, what folder they exist in should tell you what VM you should locate them in for your hierarchy.  
   
-Running `bash lvl*_capture.sh $1 $2`, where
+Running `bash lvl*_capture.sh $1 $2`, where `*` is a substitute character and
 * $1 is the process ID of either VM A2a or B2a (depending on which script you're running)
 * $2 is the process ID of either VM A2b or A2b (depending on which script you're running)
 will allow you to see the final `ksmwatch` and `top` information pertaining to the LVL-2 VM processes of interest! This assumes KSM is already running in your LVL-1 VM. These will be outputted to files called `LVL-*-ksm.txt` and `LVL-*-top.txt`  
   
-Running `bash lvl*_capture_h.sh $1 $2 $3` where
+Running `bash lvl*_capture_h.sh $1 $2 $3` where `*` is a substitute character and
 * $1 is the process ID of either VM A2a or B2a (depending on which script you're running)
 * $2 is the process ID of either VM A2b or A2b (depending on which script you're running)
 * $3 is the time in seconds between capture intervals
@@ -205,5 +206,6 @@ To initialize and connect via SSH into a VM, here's my general process:
 3) In one window, call the correct `setup-*.sh` script to begin booting up the VM
 4) In another window, call the respective `connect-*.sh` script. This won't allow for a connection until the VM has fully booted up. In my setup I usually had to wait up to 5-10 minutes for a complete LVL-2 boot-up.
 5) Once the VM has finished booting up, you'll be able to SSH in!  
-  
-The username and password for the VM is josh and admin respectively.  
+
+## Other Folders
+All other folders pertain to more specific experiments that we repeatedly visited throughout our research, each folder contains a readme document to help you navigate them. Happy deduplicating!
