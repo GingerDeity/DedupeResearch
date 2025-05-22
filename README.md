@@ -142,24 +142,24 @@ VMs are very important for distributing your work, and are very crucial for KSM 
 
 ### Hierarchy
 The following code section goes on the following assumption of VM tree hierarchy:  
-             Host  
-            /     \  
-          /         \  
-         /           \  
-      KSM-A          KSM-B  
-     /      \       /     \  
-  A2a       A2b    B2a    B2b  
+`             Host`  
+`            /     \`  
+`          /         \`  
+`         /           \`  
+`      KSM-A          KSM-B`  
+`     /      \       /     \`  
+`  A2a       A2b    B2a    B2b`  
   
 Where KSM-A and KSM-B are LVL-1 VMs, and A2a, A2b, B2a, and B2b are LVL-2 VMs. Designated scripts for both booting up each VM and connecting to them have already been provided. You'll notice the following hierarchy of MONITOR and NET values in each setup script:  
 MONITOR/NET Ports:  
-Host  
-|- KSM-A=10023/1235  
-|  |- KSM-A2a=10024/1235  
-|  |- KSM-A2b=10025/1236  
-|  
-|- KSM-B=10026/1237  
-|  |- KSM-B2a=10027/1237  
-|  |- KSM-B2b=10028/1238  
+`Host`  
+`|- KSM-A=10023/1235`  
+`|  |- KSM-A2a=10024/1235`  
+`|  |- KSM-A2b=10025/1236`  
+`|`  
+`|- KSM-B=10026/1237`  
+`|  |- KSM-B2a=10027/1237`  
+`|  |- KSM-B2b=10028/1238`  
 
 The subfolders in this VMs folder is organized based on where each script should be located. The Host folder contains all code that should be located in the Host machine, the LVL-A1 folder corresponds to code that should exist in KSM-A, LVL-B1 correlates to KSM-B, and LVL-2 correlates to code that can exist in any LVL-2 VM.  
 
