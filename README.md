@@ -165,19 +165,39 @@ The subfolders in this VMs folder is organized based on where each script should
 
 ### Essential Code
 #### Setup Scripts
-
+These scripts correlate to booting up a VM. If you're looking to change a VM's fields such as `MEMSIZE`, `NUMCPUS`, `IMG`, `MONITOR`, `NET`, `LOG`. Run each script using `bash setup-*.sh` where `*` is a substitute character.
 
 #### Connecting Scripts
-
+These scripts are what actually connect to the VM once they're fully booted up. Run each script using `bash connect-*.sh`
 
 #### Zero Memory
 This code allocates a user-specified number of bytes and fills them with zeroes. Run using `./zero_memory $1` where
 * $1 is the number of bytes to zero-out
 
-This is especially helpful in conjunction with experiments involving virtual machines, as these can contain a great deal of nonzero freed memory at any given. Typically, you would run this code on a virtual machine you're about to measure, zeroing out either all the available memory or all the free memory (both amounts can be seen in `top`).
+This is especially helpful as these can contain a great deal of nonzero freed memory at any given. Typically, you would run this code on a VM you're about to measure, zeroing out either all the available memory or all the free memory (both amounts can be seen in that VM's `top`)
 
 #### Capture Scripts
-
+These scripts are capable of capturing `top` and `ksmwatch` information pertaining to VMs of interest (assuming the same connecting addresses, usernames, and passwords as the hierarchy above describes). Remember, what folder they exist in should tell you what VM you should locate them in for your hierarchy.  
+  
+Running `bash lvl*_capture.sh $1 $2`, where
+* $1 is the process ID of either VM A2a or B2a (depending on which script you're running)
+* $2 is the process ID of either VM A2b or A2b (depending on which script you're running)
+will allow you to see the final `ksmwatch` and `top` information pertaining to the LVL-2 VM processes of interest! This assumes KSM is already running in your LVL-1 VM. These will be outputted to files called `LVL-*-ksm.txt` and `LVL-*-top.txt`  
+  
+Running `bash lvl*_capture_h.sh $1 $2 $3` where
+* $1 is the process ID of either VM A2a or B2a (depending on which script you're running)
+* $2 is the process ID of either VM A2b or A2b (depending on which script you're running)
+* $3 is the time in seconds between capture intervals
+will allow you to see the history of `ksmwatch` and `top` information pertaining to the LVL-2 VM processes of interest! This assumes KSM is already running in your LVL-1 VM. These will be outputted to files called `LVL-*-ksm.txt` and `LVL-*-top.txt`  
+  
+Running `bash lvl2_top_capture.sh $1` where
+* $1 is the LVL-2 VM PID of interest
+will print out the final filtered reading of the LVL-2 VM's `top` information before the process ends
+  
+Running `bash lvl2_top_capture.sh $1 $2` where
+* $1 is the LVL-2 VM PID of interest
+* $2 is the time in seconds between capture intervals
+will print out the final filtered reading of the LVL-2 VM's `top` information every specified interval before the process ends
 
 To initialize and connect via SSH into a VM, here's my general process:
 1) Create and attach to a tmux session using "tmux new -s ExampleName", "tmux a"
