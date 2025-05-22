@@ -11,10 +11,10 @@ Run with `bash map_and_core.sh $1 $2` where
 * $1 is a process PID  
 * $2 is the output files' prefix  
 
-Gets both the memory mapping file and core dump file of a PID
+Gets both the memory mapping file and core dump file of a PID  
 
 #### elf
-This code takes in an ELF CORE file and removes all it's metadata. This is run using `./elf $1 $2` where 
+This code takes in an ELF CORE file and removes all it's metadata. This is run using `./elf $1 $2` where  
 * $1 is the input file
 * $2 is the output file name
 
@@ -79,8 +79,8 @@ Run with `bash DedupeCheckList.sh $1 $2 $3` where
 This code outputs static deduplication results for a base file compared to all other files in a directory. For instance, if we run this on a directory named 'example' containing files A, B, C, using the command: `bash DedupeCheckList.sh 4096 A example/`, this outputs results for: [(A), (A, B), (A, C)]  
 
 #### Parse Static
-This code takes in a text file containing the output of DedupeCheckFull.sh or DedupeCheckList.sh and converts readings into a CSV file, which is very useful for getting a folders' worth of data quickly onto a spreadsheet! Run using `java ParseStatic $1 $2 [-l/-f] $3 $4` where
-* $1 is the text file of deduplicaiton result outputs
+This code takes in a text file containing the output of `DedupeCheckFull.sh` or `DedupeCheckList.sh` and converts readings into a CSV file, which is very useful for getting a folders' worth of data quickly onto a spreadsheet! Run using `java ParseStatic $1 $2 [-l/-f] $3 $4` where
+* $1 is the text file of deduplication result outputs
 * $2 is the key, which can be F for Files, DG for Dedupe Graph, UW for Unique Windows, TD for Total Data, DD for Dupe Data, DR for Dedupe Ratio, or ZW for Zero-Windows
 * `[-l/-f]` indicates if if the input file was made using DedupeCheckList (`-l`), or DedupeCheckFull (`-f`)
 * $3 is the number of unique memory dumps
@@ -93,7 +93,7 @@ Run with `bash FastFull.sh $1` where
 This code outputs all possible FastCDC deduplication results up to two files in a directory. So, for a directory named "example" that contains files A, B, C, running: `bash FastFull.sh example/` would output FastCDC deduplication results for: [(A), (A, B), (A, C), (B), (B, C), (C)]. You can modify the parameters of the FastCDC deduplication inside the script.  
 
 ## KSM
-This folder contains all code relating to KSM experiments. I'll first go over the general experiment processes. It's important to note that your Linux kernel will be to be at least version 2.6.32, though later versions will be needed for fields such as `ksm_zero_pages`, which are also crucial for meaningful deduplication data. It's also worth noting that while VMs can be used for both static window and KSM, you will definitely be using them most for KSM. The included VM will already be up-to-date.
+This folder contains all code relating to KSM experiments. I'll first go over the general experiment processes. It's important to note that your Linux kernel will be to be at least version 2.6.32, though later versions will be needed for fields such as `ksm_zero_pages`, which are also crucial for meaningful deduplication data. It's also worth noting that while VMs can be used for both static window and KSM, you will definitely be using them the most for KSM. The included VM will already be up-to-date.
 
 Some helpful links for learning:  
 https://docs.kernel.org/admin-guide/mm/ksm.html  
@@ -116,9 +116,14 @@ Tells KSM to stop merging pages. Run with `bash ksmend.sh`
 Prints out all KSM contents to the screen only once. Run with `bash ksmls.sh`  
 
 ### General Experiment Process
+For KSM experiments, we're usually interested zero-data, duplicate data, VM resident-size (RES), and process RESs. To effectively capture all the data, we'll need some windows holding KSM data, other windows holding `top` information, and other windows holding VM information. For this reason, tmux is a very important tool for easily having multiple shell environments on screen. Here are 2 images that show my general tmux setup for 1 and 2 VMs:
+
+![screenshot](Images/1VM.png)
+
+
 1) Set up a LVL-1 VM environment for KSM to run from
 2) Set at least 1 LVL-2 VM environment for KSM to monitor
-3) Set up processes that will run in LVL-2 environment(s)
+3) Set up processes that will run in the LVL-2 environment(s)
 4) In LVL-2 VMs run `./zero_memory` (explained in VM section)
 4) In your LVL-1 VM, the KSM cycle is:  
    a. `bash ksminit.sh` will initialize KSM values (only need to do once per active tmux session)  
@@ -127,15 +132,24 @@ Prints out all KSM contents to the screen only once. Run with `bash ksmls.sh`
    d. `bash ksmend.sh` to stop running KSM  
 
 ## VMs
-VMs are very important for distributing your work, and are very crucial for KSM experiments. There is a zip file containing a bare-bones version of the VM image file I used for my experiments, you'll need to increase the disk-space, RAM, and CPUs as needed for your own devices. After tailoring the IMG file to your needs, you can use this as a LVL-1 VM and scp a copy of that same IMG file into the VM itself to create LVL-2 VMs. There are 2 steps to usinga  VM, booting it up, then scp'ing into it.  
+VMs are very important for distributing your work, and are very crucial for KSM experiments. There is a zip file containing a bare-bones version of the VM image file I used for my experiments, you'll need to increase the disk-space, RAM, and CPUs as needed for your own devices. After tailoring the IMG file to your needs, you can use this as a LVL-1 VM and scp a copy of that same IMG file into the VM itself to create LVL-2 VMs. There are 2 steps to using a VM: booting it up, then scp'ing into it. We'll first go over the essential code for VMs and certain KSM experiments.
 
-To intialize and connect via SSH into a VM, here's the general process:
-1) Create and attach to a tmux session using "tmux new -s name", "tmux a"
-2) In one window, call the correct `setup-*.sh` script
-3) In another window, call the respective `connect-*.sh` script. This won't allow for a connection until the VM has fully booted up. In my setup I usually had to wait up to 5-10 minutes for a complete LVL-2 boot-up.
-4) Once the VM has finished booting up, you'll be able to SSH in!  
+### Essential Code
+#### Zero Memory
+This code allocates a user-specified number of bytes and fills them with zeroes. Run using `./zero_memory $1` where
+* $1 is the number of bytes to zero
 
-The username and password for this VM is josh and admin respectively.
+This is especially helpful in conjunction with experiments involving virtual machines, as these can contain a great deal of nonzero freed memory at any given. Typically, you would run this code on a virtual machine you're about to measure, zeroing out either all the available memory or all the free memory (both amounts can be seen in `top`).
+
+
+To initialize and connect via SSH into a VM, here's my general process:
+1) Create and attach to a tmux session using "tmux new -s ExampleName", "tmux a"
+2) Create 2 vertical windows
+3) In one window, call the correct `setup-*.sh` script to begin booting up the VM
+4) In another window, call the respective `connect-*.sh` script. This won't allow for a connection until the VM has fully booted up. In my setup I usually had to wait up to 5-10 minutes for a complete LVL-2 boot-up.
+5) Once the VM has finished booting up, you'll be able to SSH in!  
+  
+The username and password for the VM is josh and admin respectively.  
 
 VM tree structure:
               Host
