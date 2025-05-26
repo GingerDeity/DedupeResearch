@@ -11,7 +11,7 @@ Run with `./map_and_core.sh $1 $2` where
 * $1 is a process PID  
 * $2 is the output files' prefix  
 
-Outputs both a text file named `$2_maps.txt`, where `$2` is the given prefix, containing the given process' memory mapping (obtained via cat `/proc/"$1"/maps`) and a binary memory dump file of the process called `$2.$1` where `$2` is the given prefix and `$1` is the given PID.  
+Outputs both a text file named `$2_maps.txt`, where `$2` is the given prefix, containing the given process' memory mapping (obtained via `cat /proc/"$1"/maps`) and a binary memory dump file of the process called `$2.$1` where `$2` is the given prefix and `$1` is the given PID.  
 
 #### elf
 This code takes in a memory dump (specifically ELF-CORE type) file and removes all it's metadata. This is run using `./elf $1 $2` where  
@@ -85,13 +85,28 @@ The following sections describe additional analysis tools for parsed memory dump
 #### Block Analysis
 This code will look at all the static window matches and return a CDF list of the number of matches within certain ranges of bytes from each other. Simply run `python3 blockanalyze.py $1` where  
 * $1 is a matches file
-
+  
+Outputs to console a CDF of what percent of matches are within what ranges of each other, with lines looking like this:
+`2^Y B <= x < 2^(Y+1) B: 0.ZZZZ`  
+  
+Where `Y` is an integer from 6 to 63, `x` represents distance between 2 matches, and `0.ZZZZ` is the cumulative percentage from matches that are within that distance to each other.
+  
 #### Parse Matches
 This is code is typically used for verifying static-window deduplication output by reporting back how many matches are aligned with a certain user-determined number, or the same size as the user-defined number. For instance, if the user inputs `64`, it reports information about how many matches are 64B-aligned or 64B in size. Run the code using `java ParseMatches $1 $2 $3` where  
 * $1 is the window-size/alignment
 * $2 is a matches file
 * $3 is an optional output file name
 
+The output will be statistics that report how many matches were aligned or of a certain size. Here's what the output will look like, where $1 is the window-size you gave and `X` is a generic placeholder for numbers:  
+```
+$1 B-Aligned-Matches: X
+Total Matches: 		X
+Average Aligned-Match Size: X.XX B
+Average Match Size: X.XX B
+$1 B-Aligned & $1 B-Length Matches Contained THROUGHOUT: X
+Aligned/Total Ratio: X.XX%
+```
+  
 #### Map Matches
 One of my favorite pieces of code I've written, this can determine what percent of `DedupeCheck` matches come from what memory regions (including heap, stack, shared libraries, anonymous, etc)! Run using `java MapMatches [--assume-parsed] {filename.type: program_headers.txt maps.txt} matches.txt` where
 * `matches.txt` is a matches file
@@ -101,7 +116,30 @@ One of my favorite pieces of code I've written, this can determine what percent 
   * `maps.txt`: a text file of memory mapping information for `filename`, aka the text file output from `map_and_core.sh`
 * `[--assume-parsed]` specifies that the files in `matches.txt` are outputs of our `elf` code, meaning they have no metadata. This means the file offsets referred to in `matches.txt` will differ from the file offsets in each `program_headers.txt`, which can result in inaccurate mapping to the memory areas in `maps.txt` if this option is not specified  
   
+This outputs to console lots of information, but the most important is that pertaining to matches. There's two sections, one for matches whose source and copy halves **do not** share the same memory origin (aka, mismatches), and one for those matches with halves that **do** share the same memory origin. For mismatches, we have the following format for each unique pairing of source-copy:  
+```
+[COPY]   Copy-Filename : Copy-Mapname [Copy-Flags]
+    [SOURCE] Source-Filename : Source-Mapname [Source-Flags]
+    [TOTAL]  Matched-Bytes (%-of-mismatches)
+```
+You can see this tells us the file and memory-mapping name for both source and copy, as well as both the amount of bytes matched and what percent of mismatches that accounts for. For example:  
+```
+[COPY]       file1.5238 : libc10.so [RW ]
+    [SOURCE] file1.5238 : [heap] [RW ]
+    [TOTAL]  64 Bytes (5.00% of mismatches)
+```
+
+Tells us there was a 'mismatch' who's source data was from `[heap]` and who's copy was from `libc10.so`, and that this mismatch took place in the scope of a single file, `file1.5238`. There were 64 bytes worth of these mismatches, and that accounts for 5% of all mismatches.  
   
+For matches, we have the following format for each unique pairing of filename and memory-mapping:  
+`Source-Mapname [Source-Flags] : Matched-Bytes (%-of-matches)`
+This tells us the memory-mapping name of the source's data, as well as both the amount of bytes matched and what percent of matches that accounts for. For example:
+
+`libc10.so [RW ]: 44992 Bytes (2% of matches)`
+Tells us that there are 44992 bytes worth of matches that are matching data originating from `libc10.so` and that this accounts for 2% of all matches found.
+  
+After all that, there is a small bit of final information that may be useful for calculating other things as well. These final two numbers reported are simply the number of bytes duped (good for verifying against your deduplicated statistics summary) and the number of bytes worth of mismatches (allows you to calculate what percent of all matches were actually mismatches).  
+
 ### Folder-Wide Deduplication
 To quickly do deduplication over an entire folder without listing every file, you can use either `DedupeCheckFull.sh`, `DedupeCheckList.sh`, or `FastFull.sh` (if you have fastcdc installed)
 
@@ -110,7 +148,7 @@ Run with `./DedupeCheckFull.sh $1 $2` where
 * $1 is the window size  
 * $2 will be the directory to do static-window deduplication on  
 
-This code outputs all possible static deduplication results up to two files in a directory. So, for a directory named "example" that contains files A, B, C, running `./DedupeCheckFull.sh 4096 example/` would output 4KB deduplication results for [(A), (A, B), (A, C), (B), (B, C), (C)]  
+This code outputs all possible static deduplication results up to two files in a directory. So, for a directory named "example" that contains files A, B, C, running `./DedupeCheckFull.sh 4096 example/` outputs results you'd obtain from `java DedupeCheck 4096 [files]` for [(A), (A, B), (A, C), (B), (B, C), (C)]  
 
 #### DedupeCheckList
 Run with `./DedupeCheckList.sh $1 $2 $3` where  
@@ -118,7 +156,7 @@ Run with `./DedupeCheckList.sh $1 $2 $3` where
 * $2 will be the base file to compare all others too  
 * $3 will be directory to do static-window deduplication on  
 
-This code outputs static deduplication results for a base file compared to all other files in a directory. For instance, if we run this on a directory named 'example' containing files A, B, C, using the command: `./DedupeCheckList.sh 4096 A example/`, this outputs results for: [(A), (A, B), (A, C)]  
+This code outputs static deduplication summaries for a base file compared to all other files in a directory. For instance, if we run this on a directory named 'example' containing files A, B, C, using the command: `./DedupeCheckList.sh 4096 A example/`, this outputs results you'd obtain from `java DedupeCheck 4096 [files]` for: [(A), (A, B), (A, C)]  
 
 #### Parse Static
 This code takes in a text file containing the output of `DedupeCheckFull.sh` or `DedupeCheckList.sh` and converts readings into a CSV file, which is very useful for getting a folders' worth of data quickly onto a spreadsheet! Run using `java ParseStatic $1 $2 [-l/-f] $3 $4` where
