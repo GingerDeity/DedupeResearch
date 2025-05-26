@@ -37,7 +37,7 @@ Dedupe Ratio:   X.XX%
 Zero-Windows:   X B
 ```
 
-Where `X` is a generic placeholder character for any numeric character. Here's what each entry tells you:  
+Where `X` is a generic placeholder character for any number. Here's what each entry tells you:  
 * `Files` is how many files were scanned  
 * `Dedupe Graph` is the deduplication ratio after each file is scanned (with the final entry being the final deduplication ratio after all files)  
 * `Unique Windows` is how many unique matches there were (for instance, a file with matches that only came from matching data `A`, `B`, and `C` will have 3 unique windows)  
@@ -46,7 +46,28 @@ Where `X` is a generic placeholder character for any numeric character. Here's w
 * `Dedupe Ratio` is the deduplication ratio, calculated as `(Dupe Data)/(Total Data)`  
 * `Zero-Windows` is how many windows containing only zeroes were found (again, these are not included in either `Total Data` or `Dupe Data`)  
 
-Each match has 2 parts, an "Established match" and a "Discovered match." In other code, these are referred to as the "source" and "copy" of a single match respectively. The "Discovered match" tells you where a complete match has been identified and the "Established match" tells you the original data that has been matched. For instance, if this code first finds a window of data in file A that is then found again in file B, that is a match whose establishment/source is from file A and whose discovery/copy is in file B.  
+However, if verbose mode **is** specified, then in addition to the summary information above, you'll receive a list of information for every match with the following format:  
+```
+===Discovered Match===
+    Offset: X B
+    Length: X B
+    File: Y
+    Hash: Y
+===Established Match===
+    Offset: X B
+    Length: X B
+    File: Y
+    Hash: Y
+```
+
+Where `X` and `Y` are generic placeholder characters for any number or string respectively. Before explaining what each field represents, it's important to explain what "Discovered Match" and "Established Match" mean. In our code, we define a match as having two parts, an "Established match" and a "Discovered match." In later code, these are also referred to as the "source" and "copy" of a single match respectively. The "Discovered match" tells you where a complete match has been identified and the "Established match" tells you the original data that has been matched. For instance, if this code first finds a window of data in file A that is then found again in file B, that is a match whose establishment/source is from file A and whose discovery/copy is in file B. With that in mind, here's what each entry tells you:  
+* `Offset` is the offset into the file  
+* `Length` is the length of the match  
+* `File` is the name of the file this source/copy originates from  
+* `Hash` is how we hashed the data in our code for comparison  
+
+This information is repeated for every match found in static-window analysis, and is *highly* useful for code described in the upcoming "Extra Analysis" section.
+  
   
 ### General Experiment Process
 A general experiment will have the following workflow:  
@@ -57,7 +78,7 @@ A general experiment will have the following workflow:
   
 For multiple processes, simply repeat steps 1-3 for each process and then run `DedupeCheck` with all parsed dumps listed!  
   
-
+  
 ### Extra Analysis
 The following sections describe additional analysis tools for parsed memory dumps, which will generally require a text file containing information from all static-window matches, which can be done through steps 1-3 above, then `java DedupeCheck $1 -v $2 >> output.txt` where `output.txt` will contain the matches information. For simplicity's sake, we'll be referring to this as a 'matches file' from here on.  
   
@@ -79,7 +100,8 @@ One of my favorite pieces of code I've written, this can determine what percent 
   * `program_headers.txt`: a text file of program header information for `filename`, produced by running `readelf -l` on `filename`
   * `maps.txt`: a text file of memory mapping information for `filename`, aka the text file output from `map_and_core.sh`
 * `[--assume-parsed]` specifies that the files in `matches.txt` are outputs of our `elf` code, meaning they have no metadata. This means the file offsets referred to in `matches.txt` will differ from the file offsets in each `program_headers.txt`, which can result in inaccurate mapping to the memory areas in `maps.txt` if this option is not specified  
-
+  
+  
 ### Folder-Wide Deduplication
 To quickly do deduplication over an entire folder without listing every file, you can use either `DedupeCheckFull.sh`, `DedupeCheckList.sh`, or `FastFull.sh` (if you have fastcdc installed)
 
