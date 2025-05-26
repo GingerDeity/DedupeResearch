@@ -37,6 +37,15 @@ Dedupe Ratio:   X.XX%
 Zero-Windows:   X B
 ```
 
+Where `X` is a generic placeholder character for any numeric character. Here's what each entry tells you:  
+* `Files` is how many files were scanned  
+* `Dedupe Graph` is the deduplication ratio after each file is scanned (with the final entry being the final deduplication ratio after all files)  
+* `Unique Windows` is how many unique matches there were (for instance, a file with matches that only came from matching data `A`, `B`, and `C` will have 3 unique windows)  
+* `Total Data` can also be interpreted as 'non-zero' data, essentially how much data was actually scanned and accounted for in all the files. This is the denominator for deduplication ratios  
+* `Dupe Data` is how much duplicate (matching) data was found. This is the numerator for deduplication ratios  
+* `Dedupe Ratio` is the deduplication ratio, calculated as `(Dupe Data)/(Total Data)`  
+* `Zero-Windows` is how many windows containing only zeroes were found (again, these are not included in either `Total Data` or `Dupe Data`)  
+
 Each match has 2 parts, an "Established match" and a "Discovered match." In other code, these are referred to as the "source" and "copy" of a single match respectively. The "Discovered match" tells you where a complete match has been identified and the "Established match" tells you the original data that has been matched. For instance, if this code first finds a window of data in file A that is then found again in file B, that is a match whose establishment/source is from file A and whose discovery/copy is in file B.  
   
 ### General Experiment Process
@@ -154,24 +163,28 @@ and ***the username and password for the VM is josh and admin respectively.*** y
 
 ### Hierarchy
 The following code section goes on the following assumption of VM tree hierarchy:  
-`             Host`  
-`            /     \`  
-`          /         \`  
-`         /           \`  
-`      KSM-A          KSM-B`  
-`     /      \       /     \`  
-`  A2a       A2b    B2a    B2b`  
-  
+```
+              Host  
+            /      \  
+          /          \  
+         /            \  
+      KSM-A           KSM-B  
+     /      \        /     \  
+  A2a       A2b     B2a    B2b  
+```
+
 Where KSM-A and KSM-B are LVL-1 VMs, and A2a, A2b, B2a, and B2b are LVL-2 VMs. Designated scripts for both booting up each VM and connecting to them have already been provided. You'll notice the following hierarchy of MONITOR and NET values in each setup script:  
-`MONITOR/NET Ports:`  
-`Host`  
-`|- KSM-A=10023/1235`  
-`|  |- KSM-A2a=10024/1235`  
-`|  |- KSM-A2b=10025/1236`  
-`|`  
-`|- KSM-B=10026/1237`  
-`|  |- KSM-B2a=10027/1237`  
-`|  |- KSM-B2b=10028/1238`  
+```
+MONITOR/NET Ports:  
+Host  
+|- KSM-A=10023/1235  
+|  |- KSM-A2a=10024/1235  
+|  |- KSM-A2b=10025/1236  
+|  
+|- KSM-B=10026/1237  
+|  |- KSM-B2a=10027/1237  
+|  |- KSM-B2b=10028/1238  
+```
 
 The subfolders in this VMs folder is organized based on where each script should be located. The Host folder contains all code that should be located in the Host machine, the LVL-A1 folder corresponds to code that should exist in KSM-A, LVL-B1 correlates to KSM-B, and LVL-2 correlates to code that can exist in any LVL-2 VM.  
 
