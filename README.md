@@ -1,5 +1,5 @@
 # DedupeResearch
-This is the github for as much of my deduplication research as I could fit! There are 3 major folders: VMs, StaticWindow, and KSM. It's worth noting that you should install tmux in your shell environment if you haven't already, as it will be an immensely helpful tool. It's worth noting that many of the `bash` scripts are used so often, I typically include them in my environment's `.bashrc` as aliases for quicker access.
+This is the github for as much of my deduplication research as I could fit! There are 3 major folders: StaticWindow, KSM, and VMs. It's worth noting that you should install tmux in your shell environment if you haven't already, as it will be an immensely helpful tool. It's worth noting that many of the `bash` scripts are used so often, I typically include them in my environment's `.bashrc` as aliases for quicker access.
 
 ## Static Window
 This folder contains all code relating to static window experiments, using code I wrote. I'll first go over some of the essential pieces of code, then general experiment processes.
@@ -7,31 +7,42 @@ This folder contains all code relating to static window experiments, using code 
 ### Essential Code
 
 #### map_and_core
-Run with `bash map_and_core.sh $1 $2` where  
+Run with `./map_and_core.sh $1 $2` where  
 * $1 is a process PID  
 * $2 is the output files' prefix  
 
-Gets both the memory mapping file and core dump file of a PID  
+Outputs both a text file named `$2_maps.txt`, where `$2` is the given prefix, containing the given process' memory mapping (obtained via cat `/proc/"$1"/maps`) and a binary memory dump file of the process called `$2.$1` where `$2` is the given prefix and `$1` is the given PID.  
 
 #### elf
-This code takes in an ELF CORE file and removes all it's metadata. This is run using `./elf $1 $2` where  
+This code takes in a memory dump (specifically ELF-CORE type) file and removes all it's metadata. This is run using `./elf $1 $2` where  
 * $1 is the input file
 * $2 is the output file name
 
-This code is used before running static deduplication on memory dumps, as memory dumps obtained via `gcore` or `map_and_core.sh` will contain many bytes of metadata, offsetting the data we actually care about. This code removes all the metadata, and ensures the original memory is what's left. When doing static-window deduplication on memory dumps, do it on the files this code outputs.  
+Outputs a copy of the memory dump stripped of all it's metadata. This code is used before running static deduplication on memory dumps, as memory dumps obtained via `gcore` or `./map_and_core.sh` will contain many bytes of metadata, offsetting the data we actually care about. This code removes all the metadata, and ensures the original memory is what's left. When doing static-window deduplication on memory dumps, do it on the files this code outputs.  
 
 #### DedupeCheck.java
 The most fundamental piece of code here, it's what actually runs static-window deduplication. This is run using `java DedupeCheck $1 [-v] $2`, where 
 * $1 is the size of the window  
-* `-v` is a verbose option that outputs information for all matches found  
+* `-v` is an optional verbose mode that outputs information for all matches found  
 * $2 is a list of paths to binary memory dumps  
+
+If verbose mode isn't specified, the code outputs to console the following summary deduplication information: 
+```
+Files:          X
+Dedupe Graph:   [X.XX%, ..., X.XX%]
+Unique Windows: X
+Total Data:     X B
+Dupe Data:      X B        
+Dedupe Ratio:   X.XX%
+Zero-Windows:   X B
+```
 
 Each match has 2 parts, an "Established match" and a "Discovered match." In other code, these are referred to as the "source" and "copy" of a single match respectively. The "Discovered match" tells you where a complete match has been identified and the "Established match" tells you the original data that has been matched. For instance, if this code first finds a window of data in file A that is then found again in file B, that is a match whose establishment/source is from file A and whose discovery/copy is in file B.  
   
 ### General Experiment Process
 A general experiment will have the following workflow:  
 1) Start and run a process (which will have a PID referred to as `PID` from here on)  
-2) Some point in the process's life, run `bash map_and_core.sh PID output`, which outputs both the process's memory mapping text file (`output.txt`) and a memory dump binary (`output.PID`)  
+2) Some point in the process's life, run `./map_and_core.sh PID output`, which outputs both the process's memory mapping text file (`output.txt`) and a memory dump binary (`output.PID`)  
 3) Run `./elf output.PID output_P.PID`, which will remove all metadata from the `output.PID` binary, resulting in a 'parsed' file  
 4) Run `DedupeCheck` with a valid window size and the `output_P.PID` memory dump, which will then finally output static window deduplication results on the processes' memory!  
   
@@ -64,19 +75,19 @@ One of my favorite pieces of code I've written, this can determine what percent 
 To quickly do deduplication over an entire folder without listing every file, you can use either `DedupeCheckFull.sh`, `DedupeCheckList.sh`, or `FastFull.sh` (if you have fastcdc installed)
 
 #### DedupeCheckFull
-Run with `bash DedupeCheckFull.sh $1 $2` where  
+Run with `./DedupeCheckFull.sh $1 $2` where  
 * $1 is the window size  
 * $2 will be the directory to do static-window deduplication on  
 
-This code outputs all possible static deduplication results up to two files in a directory. So, for a directory named "example" that contains files A, B, C, running `bash DedupeCheckFull.sh 4096 example/` would output 4KB deduplication results for [(A), (A, B), (A, C), (B), (B, C), (C)]  
+This code outputs all possible static deduplication results up to two files in a directory. So, for a directory named "example" that contains files A, B, C, running `./DedupeCheckFull.sh 4096 example/` would output 4KB deduplication results for [(A), (A, B), (A, C), (B), (B, C), (C)]  
 
 #### DedupeCheckList
-Run with `bash DedupeCheckList.sh $1 $2 $3` where  
+Run with `./DedupeCheckList.sh $1 $2 $3` where  
 * $1 is the window size  
 * $2 will be the base file to compare all others too  
 * $3 will be directory to do static-window deduplication on  
 
-This code outputs static deduplication results for a base file compared to all other files in a directory. For instance, if we run this on a directory named 'example' containing files A, B, C, using the command: `bash DedupeCheckList.sh 4096 A example/`, this outputs results for: [(A), (A, B), (A, C)]  
+This code outputs static deduplication results for a base file compared to all other files in a directory. For instance, if we run this on a directory named 'example' containing files A, B, C, using the command: `./DedupeCheckList.sh 4096 A example/`, this outputs results for: [(A), (A, B), (A, C)]  
 
 #### Parse Static
 This code takes in a text file containing the output of `DedupeCheckFull.sh` or `DedupeCheckList.sh` and converts readings into a CSV file, which is very useful for getting a folders' worth of data quickly onto a spreadsheet! Run using `java ParseStatic $1 $2 [-l/-f] $3 $4` where
@@ -87,10 +98,10 @@ This code takes in a text file containing the output of `DedupeCheckFull.sh` or 
 * $4 is an optional output file name
 
 #### FastFull
-Run with `bash FastFull.sh $1` where  
+Run with `./FastFull.sh $1` where  
 * $1 will be directory to do FastCDC deduplication on  
 
-This code outputs all possible FastCDC deduplication results up to two files in a directory. So, for a directory named "example" that contains files A, B, C, running: `bash FastFull.sh example/` would output FastCDC deduplication results for: [(A), (A, B), (A, C), (B), (B, C), (C)]. You can modify the parameters of the FastCDC deduplication inside the script.  
+This code outputs all possible FastCDC deduplication results up to two files in a directory. So, for a directory named "example" that contains files A, B, C, running: `./FastFull.sh example/` would output FastCDC deduplication results for: [(A), (A, B), (A, C), (B), (B, C), (C)]. You can modify the parameters of the FastCDC deduplication inside the script.  
 
 ## KSM
 This folder contains all code relating to KSM experiments. I'll first go over the general experiment processes. It's important to note that your Linux kernel will be to be at least version 2.6.32, though later versions will be needed for fields such as `ksm_zero_pages`, which are also crucial for meaningful deduplication data. It's also worth noting that while VMs can be used for both static window and KSM, you will definitely be using them the most for KSM. The included VM will already be up-to-date. For future reference, it's important to know there is commonly a hierarchy of VMs, where KSM is run in the highest level (LVL-1) and merging pages in the lower-level VMs (LVL-2 VMs).
@@ -101,19 +112,19 @@ Some helpful links for learning:
 
 ### Essential Scripts
 #### ksminit
-Initializes KSM to not merge zero-pages, scan 500,000 pages at a time, and ensures KSM isn't running. Run with `bash ksminit.sh`  
+Initializes KSM to not merge zero-pages, scan 500,000 pages at a time, and ensures KSM isn't running. Run with `./ksminit.sh`  
 
 #### ksmstart
-Tells KSM to begin merging pages. Run with `bash ksmstart.sh`  
+Tells KSM to begin merging pages. Run with `./ksmstart.sh`  
 
 #### ksmwatch
-Prints out all KSM contents to the screen every second, and can be ended with Ctrl+C. Run with `bash ksmwatch.sh`  
+Prints out all KSM contents to the screen every second, and can be ended with Ctrl+C. Run with `./ksmwatch.sh`  
 
 #### ksmend
-Tells KSM to stop merging pages. Run with `bash ksmend.sh`  
+Tells KSM to stop merging pages. Run with `./ksmend.sh`  
 
 #### ksmls
-Prints out all KSM contents to the screen only once. Run with `bash ksmls.sh`  
+Prints out all KSM contents to the screen only once. Run with `./ksmls.sh`  
 
 ### General Experiment Process
 For KSM experiments, we're usually interested zero-data, duplicate data, VM resident-size (RES), and process RESs. To effectively capture all the data, we'll need some windows holding KSM data, other windows holding `top` information, and other windows holding VM information. For this reason, tmux is a very important tool for easily having multiple shell environments on screen. Here's an image that show my general tmux setup for 1 VM:
@@ -132,10 +143,10 @@ As for the general process of an experiment:
 3) Set up processes that will run in the LVL-2 environment(s)
 4) In LVL-2 VMs run `./zero_memory` (explained in VM section)
 5) In your LVL-1 VM, the KSM cycle is:  
-   a. `bash ksminit.sh` will initialize KSM values (only need to do once per active tmux session)  
-   b. `bash ksmstart.sh` to start running KSM  
-   c. `bash ksmwatch.sh` to observe KSM values while the process runs  
-   d. `bash ksmend.sh` to stop running KSM when you're satisfied  
+   a. `./ksminit.sh` will initialize KSM values (only need to do once per active tmux session)  
+   b. `./ksmstart.sh` to start running KSM  
+   c. `./ksmwatch.sh` to observe KSM values while the process runs  
+   d. `./ksmend.sh` to stop running KSM when you're satisfied  
 
 ## VMs
 VMs are very important for distributing your work, and are very crucial for KSM experiments. There is a zip file containing a bare-bones version of the VM image file I used for my experiments, 
@@ -166,10 +177,10 @@ The subfolders in this VMs folder is organized based on where each script should
 
 ### Essential Code
 #### Setup Scripts
-These scripts correlate to booting up a VM. If you're looking to change a VM's fields such as `MEMSIZE`, `NUMCPUS`, `IMG`, `MONITOR`, `NET`, `LOG`. Run each script using `bash setup-*.sh` where `*` is a substitute character.
+These scripts correlate to booting up a VM. If you're looking to change a VM's fields such as `MEMSIZE`, `NUMCPUS`, `IMG`, `MONITOR`, `NET`, `LOG`. Run each script using `./setup-*.sh` where `*` is a substitute character.
 
 #### Connecting Scripts
-These scripts are what actually connect to the VM once they're fully booted up. Run each script using `bash connect-*.sh` where `*` is a substitute character
+These scripts are what actually connect to the VM once they're fully booted up. Run each script using `./connect-*.sh` where `*` is a substitute character
 
 #### Zero Memory
 This code allocates a user-specified number of bytes and fills them with zeroes. Run using `./zero_memory $1` where 
@@ -180,22 +191,22 @@ This is especially helpful as these can contain a great deal of nonzero freed me
 #### Capture Scripts
 These scripts are capable of capturing `top` and `ksmwatch` information pertaining to VMs of interest (assuming the same connecting addresses, usernames, and passwords as the hierarchy above describes). Remember, what folder they exist in should tell you what VM you should locate them in for your hierarchy.  
   
-Running `bash lvl*_capture.sh $1 $2`, where `*` is a substitute character and
+Running `./lvl*_capture.sh $1 $2`, where `*` is a substitute character and
 * $1 is the process ID of either VM A2a or B2a (depending on which script you're running)
 * $2 is the process ID of either VM A2b or A2b (depending on which script you're running)
 will allow you to see the final `ksmwatch` and `top` information pertaining to the LVL-2 VM processes of interest! This assumes KSM is already running in your LVL-1 VM. These will be outputted to files called `LVL-*-ksm.txt` and `LVL-*-top.txt`  
   
-Running `bash lvl*_capture_h.sh $1 $2 $3` where `*` is a substitute character and
+Running `./lvl*_capture_h.sh $1 $2 $3` where `*` is a substitute character and
 * $1 is the process ID of either VM A2a or B2a (depending on which script you're running)
 * $2 is the process ID of either VM A2b or A2b (depending on which script you're running)
 * $3 is the time in seconds between capture intervals
 will allow you to see the history of `ksmwatch` and `top` information pertaining to the LVL-2 VM processes of interest! This assumes KSM is already running in your LVL-1 VM. These will be outputted to files called `LVL-*-ksm.txt` and `LVL-*-top.txt`  
   
-Running `bash lvl2_top_capture.sh $1` where
+Running `./lvl2_top_capture.sh $1` where
 * $1 is the LVL-2 VM PID of interest
 will print out the final filtered reading of the LVL-2 VM's `top` information before the process ends
   
-Running `bash lvl2_top_capture.sh $1 $2` where
+Running `./lvl2_top_capture.sh $1 $2` where
 * $1 is the LVL-2 VM PID of interest
 * $2 is the time in seconds between capture intervals
 will print out the final filtered reading of the LVL-2 VM's `top` information every specified interval before the process ends
