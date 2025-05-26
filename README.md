@@ -1,8 +1,17 @@
 # DedupeResearch
-This is the github for as much of my deduplication research as I could fit! There are 3 major folders: StaticWindow, KSM, and VMs. It's worth noting that you should install tmux in your shell environment if you haven't already, as it will be an immensely helpful tool. It's worth noting that many of the `bash` scripts are used so often, I typically include them in my environment's `.bashrc` as aliases for quicker access.
+Hello, this GitHub pertains to the results of my research revolving around memory deduplication, which is the practice of finding identical pieces of memory and storing only one copy of that memory. While there are many files and folders in this repository, there are three major folders we'll b focusing on in this readme: StaticWindow, KSM, and VMs. It's worth noting that you should install tmux in your shell environment if you haven't already, as it will be an immensely helpful tool. It's worth noting that many of the `bash` scripts are used so often, I typically include them in my environment's `.bashrc` as aliases for quicker access. Now, for a description of the following sections.  
+  
+The "Static Window" section is the biggest of them all, and will pertain to all code relevant to **static-window deduplication**, which is deduplicating memory by looking for identical *windows* of code, one window at a time. A *window* refers to the size of memory to be viewed, such as 64B or 4kB. For instance, if I want to see how much duplicate data exists between two files using static-window deduplication, I'd have to first specify the window (let's say 4kB, or one page) and then we would deduplicate by analyzing 4kB of data at a time. The "Static Window" section contains descriptions for essential pieces of code that can obtain necessary files and memory dumps, format memory dumps, and perform static-window deduplication. The folder also highlights the general experimentation workflow, and then extra analysis one can perform on static-window deduplication results. These extra analyses include finding the average distances between matches, where in memory matches are coming from, and other code that allow you to quickly perform two-file deduplication over entire directories.  
+  
+The "KSM" section is much shorter, and pertains to scripts relevant for experiments that use **KSM**, or Kernel-Same-Page-Merging, a Linux feauture that does deduplication from an OS-level. This section goes over all the scripts I've created that allow the user to quickly initialize, activate, monitor, and stop KSM. KSM itself is rather closely-tied to VMs, so you'll see that the next section will also be very helpful for dealing with KSM.  
+  
+The "VMs" section delves into the code that allows for both booting up and connecting virtual machines (VMs) and the general structure and hierarchy I used in my experiments. There will also be a template VM that you can use for starting. We also go into important code that allows you to essentially 'initialize' VMs for deduplication experiments, and other code that allows you to get histories of `top` and KSM outputs at differing VM levels!  
 
+I hope this repository may help you in your deduplication endeavors, let's begin!  
+  
+  
 ## Static Window
-This folder contains all code relating to static window experiments, using code I wrote. I'll first go over some of the essential pieces of code, then general experiment processes.
+This folder contains all code relating to static window experiments, using code I wrote. Everything described here will be found in the `StaticWindow` folder. I'll first go over some of the essential pieces of code, then general experiment processes.
 
 ### Essential Code
 
@@ -173,7 +182,7 @@ Run with `./FastFull.sh $1` where
 This code outputs all possible FastCDC deduplication results up to two files in a directory. So, for a directory named "example" that contains files A, B, C, running: `./FastFull.sh example/` would output FastCDC deduplication results for: [(A), (A, B), (A, C), (B), (B, C), (C)]. You can modify the parameters of the FastCDC deduplication inside the script.  
 
 ## KSM
-This folder contains all code relating to KSM experiments. I'll first go over the general experiment processes. It's important to note that your Linux kernel will be to be at least version 2.6.32, though later versions will be needed for fields such as `ksm_zero_pages`, which are also crucial for meaningful deduplication data. It's also worth noting that while VMs can be used for both static window and KSM, you will definitely be using them the most for KSM. The included VM will already be up-to-date. For future reference, it's important to know there is commonly a hierarchy of VMs, where KSM is run in the highest level (LVL-1) and merging pages in the lower-level VMs (LVL-2 VMs).
+This section pertains to strictly KSM code and experiment processes, and all needed scripts can be found in the `KSM` folder. I'll first go over the essential scripts and then general experiment processes. It's important to note that your Linux kernel will be to be at least version 2.6.32, though later versions will be needed for fields such as `ksm_zero_pages`, which are also crucial for meaningful deduplication data. It's also worth noting that while VMs can be used for both static window and KSM, you will definitely be using them the most for KSM. The included VM will already be up-to-date. For future reference, it's important to know there is commonly a hierarchy of VMs, where KSM is run in the highest level (LVL-1) and merging pages in the lower-level VMs (LVL-2 VMs).
 
 Some helpful links for learning:  
 * https://docs.kernel.org/admin-guide/mm/ksm.html  
@@ -218,8 +227,7 @@ As for the general process of an experiment:
    d. `./ksmend.sh` to stop running KSM when you're satisfied  
 
 ## VMs
-VMs are very important for distributing your work, and are very crucial for KSM experiments. There is a zip file containing a bare-bones version of the VM image file I used for my experiments, 
-and ***the username and password for the VM is josh and admin respectively.*** you'll need to increase the disk-space, RAM, and CPUs as needed for your own devices. After tailoring the IMG file to your needs, you can use this as a LVL-1 VM and scp a copy of that same IMG file into the VM itself to create LVL-2 VMs. There are 2 steps to using a VM: booting it up, then scp'ing into it. We'll first go over the essential code for VMs and certain KSM experiments.  
+VMs are very important for distributing your work, and are very crucial for KSM experiments. All code listed here will be found in the `VMs` folder. There is a zip file containing a bare-bones version of the VM image file I used for my experiments, and ***the username and password for the VM is josh and admin respectively.*** you'll need to increase the disk-space, RAM, and CPUs as needed for your own devices. After tailoring the IMG file to your needs, you can use this as a LVL-1 VM and scp a copy of that same IMG file into the VM itself to create LVL-2 VMs. There are 2 steps to using a VM: booting it up, then scp'ing into it. We'll first go over the essential code for VMs and certain KSM experiments.  
 
 ### Hierarchy
 The following code section goes on the following assumption of VM tree hierarchy:  
@@ -277,12 +285,12 @@ will allow you to see the history of `ksmwatch` and `top` information pertaining
   
 Running `./lvl2_top_capture.sh $1` where
 * $1 is the LVL-2 VM PID of interest
-will print out the final filtered reading of the LVL-2 VM's `top` information before the process ends
+will output the final filtered reading of the LVL-2 VM's `top` information before the process ends
   
 Running `./lvl2_top_capture.sh $1 $2` where
 * $1 is the LVL-2 VM PID of interest
 * $2 is the time in seconds between capture intervals
-will print out the final filtered reading of the LVL-2 VM's `top` information every specified interval before the process ends
+will output the filtered reading of the LVL-2 VM's `top` information every specified interval before the process ends
 
 To initialize and connect via SSH into a VM, here's my general process:
 1) Create and attach to a tmux session using "tmux new -s ExampleName", "tmux a"
