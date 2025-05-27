@@ -11,7 +11,7 @@ I hope this repository may help you in your deduplication endeavors, let's begin
   
   
 ## Static Window
-This folder contains all code relating to static window experiments, using code I wrote. Everything described here will be found in the `StaticWindow` folder. I'll first go over some of the essential pieces of code, then general experiment processes.
+This folder contains all code relating to static window experiments, using code I wrote. Everything described here will be found in the `StaticWindow` folder. I'll first go over some of the essential pieces of code, then general experiment processes. There is also an Example subfolder that has it's own dedicated walkthrough readme.  
 
 ### Essential Code
 
