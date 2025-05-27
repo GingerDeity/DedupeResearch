@@ -6,7 +6,7 @@ The "Static Window" section is the biggest of them all, and will pertain to all 
 The "KSM" section is much shorter, and pertains to scripts relevant for experiments that use **KSM**, or Kernel-Same-Page-Merging, a Linux feauture that does deduplication from an OS-level. This section goes over all the scripts I've created that allow the user to quickly initialize, activate, monitor, and stop KSM. KSM itself is rather closely-tied to VMs, so you'll see that the next section will also be very helpful for dealing with KSM.  
   
 The "VMs" section delves into the code that allows for both booting up and connecting virtual machines (VMs) and the general structure and hierarchy I used in my experiments. There will also be a template VM that you can use for starting. We also go into important code that allows you to essentially 'initialize' VMs for deduplication experiments, and other code that allows you to get histories of `top` and KSM outputs at differing VM levels!  
-
+  
 I hope this repository may help you in your deduplication endeavors, let's begin!  
   
   
