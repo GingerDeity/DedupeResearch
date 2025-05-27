@@ -53,7 +53,7 @@ public class ParseMatches {
 			
 			// Checks if we've looked through all recorded matches
 			String endCheck = currWrite.substring(0, 7); 
-			if (endCheck.equals("\nFiles:")) { break; }
+			if (endCheck.contains("Files: ")) { break; }
 
 			// Obtains the offset of the discovered match
 			String fullOffset = sc.nextLine();
