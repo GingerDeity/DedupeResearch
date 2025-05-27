@@ -1,0 +1,23 @@
+5cbd3e5af000-5cbd3e5b0000 r--p 00000000 08:13 183717114                  /hdd0/atreyu/hello
+5cbd3e5b0000-5cbd3e5b1000 r-xp 00001000 08:13 183717114                  /hdd0/atreyu/hello
+5cbd3e5b1000-5cbd3e5b2000 r--p 00002000 08:13 183717114                  /hdd0/atreyu/hello
+5cbd3e5b2000-5cbd3e5b3000 r--p 00002000 08:13 183717114                  /hdd0/atreyu/hello
+5cbd3e5b3000-5cbd3e5b4000 rw-p 00003000 08:13 183717114                  /hdd0/atreyu/hello
+5cbd71183000-5cbd711a4000 rw-p 00000000 00:00 0                          [heap]
+753452a00000-753452a28000 r--p 00000000 08:02 41162275                   /usr/lib/x86_64-linux-gnu/libc.so.6
+753452a28000-753452bb0000 r-xp 00028000 08:02 41162275                   /usr/lib/x86_64-linux-gnu/libc.so.6
+753452bb0000-753452bff000 r--p 001b0000 08:02 41162275                   /usr/lib/x86_64-linux-gnu/libc.so.6
+753452bff000-753452c03000 r--p 001fe000 08:02 41162275                   /usr/lib/x86_64-linux-gnu/libc.so.6
+753452c03000-753452c05000 rw-p 00202000 08:02 41162275                   /usr/lib/x86_64-linux-gnu/libc.so.6
+753452c05000-753452c12000 rw-p 00000000 00:00 0 
+753452d4e000-753452d51000 rw-p 00000000 00:00 0 
+753452d63000-753452d65000 rw-p 00000000 00:00 0 
+753452d65000-753452d69000 r--p 00000000 00:00 0                          [vvar]
+753452d69000-753452d6b000 r-xp 00000000 00:00 0                          [vdso]
+753452d6b000-753452d6c000 r--p 00000000 08:02 41162272                   /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+753452d6c000-753452d97000 r-xp 00001000 08:02 41162272                   /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+753452d97000-753452da1000 r--p 0002c000 08:02 41162272                   /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+753452da1000-753452da3000 r--p 00036000 08:02 41162272                   /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+753452da3000-753452da5000 rw-p 00038000 08:02 41162272                   /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+7ffd585b5000-7ffd585d6000 rw-p 00000000 00:00 0                          [stack]
+ffffffffff600000-ffffffffff601000 --xp 00000000 00:00 0                  [vsyscall]
