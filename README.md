@@ -93,7 +93,7 @@ The following sections describe additional analysis tools for parsed memory dump
   
 #### Block Analysis
 This code will look at all the static window matches and return a CDF list of the number of matches within certain ranges of bytes from each other. Simply run `python3 blockanalyze.py $1` where  
-* $1 is a matches file
+* $1 is a matches file, where **deduplication was run with a 64B-sized window on a single file**
   
 Outputs to console a CDF of what percent of matches are within what ranges of each other, with lines looking like this:
 `2^Y B <= x < 2^(Y+1) B: 0.ZZZZ`  

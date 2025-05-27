@@ -1,0 +1,66 @@
+MMAP Addr Range: 0x7432c9edc000-0x7432c9f6e7e0
+===Segment 1: 1016-5111===
+    Currently written: 4096
+    Address we read from: 0x7432c9edc3f8
+    Segment 1 completed:(4096 B detected, 4096 B written)
+===Segment 2: 5112-9207===
+    Currently written: 4096
+    Address we read from: 0x7432c9edd3f8
+    Segment 2 completed:(4096 B detected, 4096 B written)
+===Segment 3: 9208-13303===
+    Currently written: 4096
+    Address we read from: 0x7432c9ede3f8
+    Segment 3 completed:(4096 B detected, 4096 B written)
+===Segment 4: 13304-148471===
+    Currently written: 135168
+    Address we read from: 0x7432c9edf3f8
+    Segment 4 completed:(135168 B detected, 135168 B written)
+===Segment 5: 148472-312311===
+    Currently written: 163840
+    Address we read from: 0x7432c9f003f8
+    Segment 5 completed:(163840 B detected, 163840 B written)
+===Segment 6: 312312-328695===
+    Currently written: 16384
+    Address we read from: 0x7432c9f283f8
+    Segment 6 completed:(16384 B detected, 16384 B written)
+===Segment 7: 328696-336887===
+    Currently written: 8192
+    Address we read from: 0x7432c9f2c3f8
+    Segment 7 completed:(8192 B detected, 8192 B written)
+===Segment 8: 336888-390135===
+    Currently written: 53248
+    Address we read from: 0x7432c9f2e3f8
+    Segment 8 completed:(53248 B detected, 53248 B written)
+===Segment 9: 390136-402423===
+    Currently written: 12288
+    Address we read from: 0x7432c9f3b3f8
+    Segment 9 completed:(12288 B detected, 12288 B written)
+===Segment 10: 402424-410615===
+    Currently written: 8192
+    Address we read from: 0x7432c9f3e3f8
+    Segment 10 completed:(8192 B detected, 8192 B written)
+===Segment 11: 410616-418807===
+    Currently written: 8192
+    Address we read from: 0x7432c9f403f8
+    Segment 11 completed:(8192 B detected, 8192 B written)
+===Segment 12: 418808-422903===
+    Currently written: 4096
+    Address we read from: 0x7432c9f423f8
+    Segment 12 completed:(4096 B detected, 4096 B written)
+===Segment 13: 422904-431095===
+    Currently written: 8192
+    Address we read from: 0x7432c9f433f8
+    Segment 13 completed:(8192 B detected, 8192 B written)
+===Segment 14: 431096-439287===
+    Currently written: 8192
+    Address we read from: 0x7432c9f453f8
+    Segment 14 completed:(8192 B detected, 8192 B written)
+===Segment 15: 439288-574455===
+    Currently written: 135168
+    Address we read from: 0x7432c9f473f8
+    Segment 15 completed:(135168 B detected, 135168 B written)
+===Segment 16: 574456-578551===
+    Currently written: 4096
+    Address we read from: 0x7432c9f683f8
+    Segment 16 completed:(4096 B detected, 4096 B written)
+Total parsed size: 577536 B
