@@ -1,0 +1,106 @@
+
+===Discovered Match===
+    Offset: 332864 B
+    Length: 64 B
+    File: test/hello1_P.2179878
+    Hash: 5TvXel/3lTJYfRis/8v93LxtNwUvi0goZV4eAWLl3NM=
+===Established Match===
+    Offset: 323200 B
+    Length: 64 B
+    File: test/hello1_P.2179878
+    Hash: 5TvXel/3lTJYfRis/8v93LxtNwUvi0goZV4eAWLl3NM=
+
+===Discovered Match===
+    Offset: 426304 B
+    Length: 64 B
+    File: test/hello1_P.2179878
+    Hash: WadR5dfRfuDz7rqz7xdRKsoVCsxvWRc9biF8zM7V8NQ=
+===Established Match===
+    Offset: 423040 B
+    Length: 64 B
+    File: test/hello1_P.2179878
+    Hash: WadR5dfRfuDz7rqz7xdRKsoVCsxvWRc9biF8zM7V8NQ=
+
+===Discovered Match===
+    Offset: 426816 B
+    Length: 64 B
+    File: test/hello1_P.2179878
+    Hash: y1koRBIdkm8co61OHW+52OJg7W4yFjYfdzLpdaDou/Y=
+===Established Match===
+    Offset: 335744 B
+    Length: 64 B
+    File: test/hello1_P.2179878
+    Hash: y1koRBIdkm8co61OHW+52OJg7W4yFjYfdzLpdaDou/Y=
+
+===Discovered Match===
+    Offset: 427904 B
+    Length: 64 B
+    File: test/hello1_P.2179878
+    Hash: jLcVv27zjZzVwRHb4g+GTt1ePt9C4UvhjIsnWESGU74=
+===Established Match===
+    Offset: 425728 B
+    Length: 64 B
+    File: test/hello1_P.2179878
+    Hash: jLcVv27zjZzVwRHb4g+GTt1ePt9C4UvhjIsnWESGU74=
+
+===Discovered Match===
+    Offset: 428352 B
+    Length: 64 B
+    File: test/hello1_P.2179878
+    Hash: zXAYZCGjylMOkV0I/os6SjUZmDmZrv4dD/6O5Wqz+iA=
+===Established Match===
+    Offset: 425088 B
+    Length: 64 B
+    File: test/hello1_P.2179878
+    Hash: zXAYZCGjylMOkV0I/os6SjUZmDmZrv4dD/6O5Wqz+iA=
+
+===Discovered Match===
+    Offset: 436224 B
+    Length: 64 B
+    File: test/hello1_P.2179878
+    Hash: 6zG/wn1q9Y2neHWy4Zc0rKsW6/CYmqt/uLAFCumXB8M=
+===Established Match===
+    Offset: 436160 B
+    Length: 64 B
+    File: test/hello1_P.2179878
+    Hash: 6zG/wn1q9Y2neHWy4Zc0rKsW6/CYmqt/uLAFCumXB8M=
+
+===Discovered Match===
+    Offset: 436288 B
+    Length: 64 B
+    File: test/hello1_P.2179878
+    Hash: 6zG/wn1q9Y2neHWy4Zc0rKsW6/CYmqt/uLAFCumXB8M=
+===Established Match===
+    Offset: 436160 B
+    Length: 64 B
+    File: test/hello1_P.2179878
+    Hash: 6zG/wn1q9Y2neHWy4Zc0rKsW6/CYmqt/uLAFCumXB8M=
+
+===Discovered Match===
+    Offset: 437696 B
+    Length: 64 B
+    File: test/hello1_P.2179878
+    Hash: gAhTpwdU2SNf0c4An3yuOfVRdNaSAjRBM1NqWIcRvnU=
+===Established Match===
+    Offset: 437632 B
+    Length: 64 B
+    File: test/hello1_P.2179878
+    Hash: gAhTpwdU2SNf0c4An3yuOfVRdNaSAjRBM1NqWIcRvnU=
+
+===Discovered Match===
+    Offset: 437760 B
+    Length: 64 B
+    File: test/hello1_P.2179878
+    Hash: gAhTpwdU2SNf0c4An3yuOfVRdNaSAjRBM1NqWIcRvnU=
+===Established Match===
+    Offset: 437632 B
+    Length: 64 B
+    File: test/hello1_P.2179878
+    Hash: gAhTpwdU2SNf0c4An3yuOfVRdNaSAjRBM1NqWIcRvnU=
+Files:          1
+Dedupe Graph:   [0.27%]
+Unique Windows: 3381
+Total Data:     216960 B
+Dupe Data:      576 B
+Dedupe Ratio:   0.27%
+Zero-Windows:   360576 B

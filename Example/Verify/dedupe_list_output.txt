@@ -1,0 +1,27 @@
+SCANNING test/hello2_P.2179948
+Files:          1
+Dedupe Graph:   [0.00%]
+Unique Windows: 67
+Total Data:     274432 B
+Dupe Data:      0 B
+Dedupe Ratio:   0.00%
+Zero-Windows:   303104 B
+
+SCANNING test/hello2_P.2179948 test/hello1_P.2179878
+Files:          2
+Dedupe Graph:   [0.00%, 35.07%]
+Unique Windows: 87
+Total Data:     548864 B
+Dupe Data:      192512 B
+Dedupe Ratio:   35.07%
+Zero-Windows:   606208 B
+
+SCANNING test/hello2_P.2179948 test/hello3_P.2179967
+Files:          2
+Dedupe Graph:   [0.00%, 36.30%]
+Unique Windows: 86
+Total Data:     552960 B
+Dupe Data:      200704 B
+Dedupe Ratio:   36.30%
+Zero-Windows:   602112 B
+

@@ -1,0 +1,54 @@
+SCANNING hello1_P.2179878
+Files:          1
+Dedupe Graph:   [0.00%]
+Unique Windows: 67
+Total Data:     274432 B
+Dupe Data:      0 B
+Dedupe Ratio:   0.00%
+Zero-Windows:   303104 B
+
+SCANNING hello1_P.2179878 hello2_P.2179948
+Files:          2
+Dedupe Graph:   [0.00%, 35.07%]
+Unique Windows: 87
+Total Data:     548864 B
+Dupe Data:      192512 B
+Dedupe Ratio:   35.07%
+Zero-Windows:   606208 B
+
+SCANNING hello1_P.2179878 hello3_P.2179967
+Files:          2
+Dedupe Graph:   [0.00%, 34.81%]
+Unique Windows: 88
+Total Data:     552960 B
+Dupe Data:      192512 B
+Dedupe Ratio:   34.81%
+Zero-Windows:   602112 B
+
+SCANNING hello2_P.2179948
+Files:          1
+Dedupe Graph:   [0.00%]
+Unique Windows: 67
+Total Data:     274432 B
+Dupe Data:      0 B
+Dedupe Ratio:   0.00%
+Zero-Windows:   303104 B
+
+SCANNING hello2_P.2179948 hello3_P.2179967
+Files:          2
+Dedupe Graph:   [0.00%, 36.30%]
+Unique Windows: 86
+Total Data:     552960 B
+Dupe Data:      200704 B
+Dedupe Ratio:   36.30%
+Zero-Windows:   602112 B
+
+SCANNING hello3_P.2179967
+Files:          1
+Dedupe Graph:   [0.00%]
+Unique Windows: 68
+Total Data:     278528 B
+Dupe Data:      0 B
+Dedupe Ratio:   0.00%
+Zero-Windows:   299008 B
+
