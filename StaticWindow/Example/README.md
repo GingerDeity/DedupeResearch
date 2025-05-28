@@ -7,7 +7,7 @@ Home
   |-test.bin
 ```
   
-Then the command to have DedupeCheck.java work on the test.bin file will depend on where I'm located. For instance, in my shell environment I'm located in the Home directory, then I'd have to pass in `test/test.bin`. Keep this in mind for how you'e set up your own environment as you work through the walkthrough.  
+Then the command to have DedupeCheck.java work on the test.bin file will depend on where I'm located. For instance, in my shell environment I'm located in the Home directory, then I'd have to pass in `Example/test.bin`. Keep this in mind for how you'e set up your own environment as you work through the walkthrough.  
   
 # Basics
 First, unzip the hello1.tar.gz file, and run the command: `elf hello1.2179878 hello1_P.2179878` to remove all the metadata from the hello1 memory dump. You can name the output file anything you like, but I prefer to add the `_P` to denote a dump as 'parsed'. You'll see that the code outputs all sections it writes and a final number showing the new file size. If you want to verify correct output, you can compare this output to the hello1_elf_output.txt inside the Verify folder. Now that we have a working memory dump, let's run deduplication on it!  

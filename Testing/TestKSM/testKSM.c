@@ -11,7 +11,7 @@
 #include <sys/mman.h>
 
 int main() {
-	size_t size = 4096 * 5; // each call to posix_memalign() allocates five pages
+	size_t size = 4096 * 50; // each call to posix_memalign() allocates five pages
 	char* memory1;
 	char* memory2;
 	

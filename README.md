@@ -133,7 +133,7 @@ This outputs to console lots of information, but the most important is that pert
 ```
 You can see this tells us the file and memory-mapping name for both source and copy, as well as both the amount of bytes matched and what percent of mismatches that accounts for. For example:  
 ```
-[COPY]       file1.5238 : libc10.so [RW ]
+[COPY]   file1.5238 : libc10.so [RW ]
     [SOURCE] file1.5238 : [heap] [RW ]
     [TOTAL]  64 Bytes (5.00% of mismatches)
 ```
@@ -182,7 +182,7 @@ Run with `./FastFull.sh $1` where
 This code outputs all possible FastCDC deduplication results up to two files in a directory. So, for a directory named "example" that contains files A, B, C, running: `./FastFull.sh example/` would output FastCDC deduplication results for: [(A), (A, B), (A, C), (B), (B, C), (C)]. You can modify the parameters of the FastCDC deduplication inside the script.  
 
 ## KSM
-This section pertains to strictly KSM code and experiment processes, and all needed scripts can be found in the `KSM` folder. I'll first go over the essential scripts and then general experiment processes. It's important to note that your Linux kernel will be to be at least version 2.6.32, though later versions will be needed for fields such as `ksm_zero_pages`, which are also crucial for meaningful deduplication data. It's also worth noting that while VMs can be used for both static window and KSM, you will definitely be using them the most for KSM. The included VM will already be up-to-date. For future reference, it's important to know there is commonly a hierarchy of VMs, where KSM is run in the highest level (LVL-1) and merging pages in the lower-level VMs (LVL-2 VMs).
+This section pertains to strictly KSM code and experiment processes, and all needed scripts can be found in the `KSM` folder. I'll first go over the essential scripts and then general experiment processes. It's important to note that your Linux kernel will be to be at least version 2.6.32, though later versions will be needed for fields such as `ksm_zero_pages`, which are also crucial for meaningful deduplication data. It's also worth noting that while VMs can be used for both static window and KSM, you will definitely be using them the most for KSM. The included VM will already be up-to-date. For future reference, it's important to know there is commonly a hierarchy of VMs, where KSM is run in the highest level (LVL-1) and merging pages in the lower-level VMs (LVL-2 VMs). There's also an Example subfolder containing it's own dedicated readme.  
 
 Some helpful links for learning:  
 * https://docs.kernel.org/admin-guide/mm/ksm.html  
@@ -205,7 +205,7 @@ Tells KSM to stop merging pages. Run with `./ksmend.sh`
 Prints out all KSM contents to the screen only once. Run with `./ksmls.sh`  
 
 ### General Experiment Process
-For KSM experiments, we're usually interested zero-data, duplicate data, VM resident-size (RES), and process RESs. To effectively capture all the data, we'll need some windows holding KSM data, other windows holding `top` information, and other windows holding VM information. For this reason, tmux is a very important tool for easily having multiple shell environments on screen. Here's an image that show my general tmux setup for 1 VM:
+For KSM experiments, we're usually interested zero-data, duplicate data, VM resident-size (RES), and process RESs. When it comes to connecting what KSM reports to our static-window experiments, `ksm_zero_pages` is the same as `Zero-Windows` and `pages_sharing` is the same as `Duped Data`. Of course, KSM reports pages and our code reports bytes. The conversion is simple, just multiple both the KSM fields with 4096. To effectively capture all the data, we'll need some windows holding KSM data, other windows holding `top` information, and other windows holding VM information. For this reason, tmux is a very important tool for easily having multiple shell environments on screen. Here's an image that show my general tmux setup for 1 VM:
 
 ![screenshot](Images/1VM.png)
   
