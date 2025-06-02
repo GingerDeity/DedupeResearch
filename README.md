@@ -238,7 +238,7 @@ The following code section goes on the following assumption of VM tree hierarchy
          /            \  
       KSM-A           KSM-B  
      /      \        /     \  
-  A2a       A2b     B2a    B2b  
+   A2a      A2b    B2a     B2b  
 ```
 
 Where KSM-A and KSM-B are LVL-1 VMs, and A2a, A2b, B2a, and B2b are LVL-2 VMs. Designated scripts for both booting up each VM and connecting to them have already been provided. You'll notice the following hierarchy of MONITOR and NET values in each setup script:  
