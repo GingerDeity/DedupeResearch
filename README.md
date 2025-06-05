@@ -258,7 +258,7 @@ The subfolders in this VMs folder is organized based on where each script should
 
 ### Essential Code
 #### Setup Scripts
-These scripts correlate to booting up a VM. If you're looking to change a VM's fields such as `MEMSIZE`, `NUMCPUS`, `IMG`, `MONITOR`, `NET`, `LOG`. Run each script using `./setup-*.sh` where `*` is a substitute character.
+These scripts correlate to booting up a VM. If you're looking to change a VM's fields such as `MEMSIZE`, `NUMCPUS`, `IMG`, `MONITOR`, `NET`, `LOG`. Run each script using `sudo ./setup-*.sh` where `*` is a substitute character.
 
 #### Connecting Scripts
 These scripts are what actually connect to the VM once they're fully booted up. Run each script using `./connect-*.sh` where `*` is a substitute character
